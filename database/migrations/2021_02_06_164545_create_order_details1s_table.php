@@ -20,7 +20,6 @@ class CreateOrderDetails1sTable extends Migration
             $table->text('reason_status_change')->nullable();
             $table->string('tracking_no', 100)->nullable();
             $table->bigInteger('updated_by')->nullable();
-            $table->foreign('updated_by')->references('id')->on('users');
             $table->timestamps();
         });
     }

@@ -21,3 +21,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('order', [ApiController::class, 'newOrder']);
+Route::post('order/update', [ApiController::class, 'updateOrder']);
