@@ -38,6 +38,20 @@ class ApiController extends Controller
             return response()->json($response);
 
         } else {
+            $orderWeight = 0;
+            $orderVolWeight = 0;
+            
+            foreach($request->meta_data as $item){
+                if($item['key'] == '_cart_volweight')
+                {
+                    $orderVolWeight = $item['value'];
+                }
+                if($item['key'] == '_cart_weight')
+                {
+                    $orderWeight = $item['value'];
+                }
+            }
+
             $order = new OrderDetails;
             $order->order_number = $request->number;
             $order->order_data = serialize($request->all());
@@ -45,6 +59,8 @@ class ApiController extends Controller
             $order->status = $request->status;
             $order->save();
             $orderDetail = new OrderDetails1;
+            $orderDetail->total_weight = $orderWeight;
+            $orderDetail->total_vol_weight = $orderVolWeight;
             $order->OrderDetails1()->save($orderDetail);
 
             $response = [];

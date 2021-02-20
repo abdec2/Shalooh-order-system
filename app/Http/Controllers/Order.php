@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\OrderDetails;
 use Illuminate\Support\Facades\Http;
 use App\Classes\Shipping\SMSA;
+use App\Classes\Shipping\FedEx;
 use App\Classes\Shipping\KeyArabia;
 use App\Classes\livesite\WoocommerceClass;
 
@@ -37,6 +38,9 @@ class Order extends Controller
             $orderArray['phone'] = $orderData['billing']['phone'];
             $orderArray['statusChangeReason'] = $orderDetails[0]->OrderDetails1->reason_status_change;
             $orderArray['trackingNo'] = $orderDetails[0]->OrderDetails1->tracking_no;
+            $orderArray['totalWeight'] = $orderDetails[0]->OrderDetails1->total_weight;;
+            $orderArray['totalVolWeight'] = $orderDetails[0]->OrderDetails1->total_vol_weight;;
+
             return view('orders', $orderArray);
         }
         else {
@@ -87,6 +91,11 @@ class Order extends Controller
 
                 $orderUpdate->OrderDetails1()->update([
                     'reason_status_change' => $request->statusChangeReason,
+                    'total_vol_weight' => $request->totalVolWeight,
+                    'package_size' => $request->shipping_package_size,
+                    'package_length' => $request->package_length,
+                    'package_width' => $request->package_width,
+                    'package_height' => $request->package_height,
                     'updated_by' => $request->user()->id
                 ]);
 
@@ -138,6 +147,11 @@ class Order extends Controller
                 $orderArray['payment_method'] = $orderData['payment_method'];
                 $orderArray['order_amount'] = $orderData['total'];
                 $orderArray['email'] = $orderData['billing']['email'];
+                $orderArray['orderweight'] = $request->totalWeight;
+                $orderArray['orderVolweight'] = $request->totalVolWeight;
+                $orderArray['package_length'] = $request->package_length;
+                $orderArray['package_width'] = $request->package_width;
+                $orderArray['package_height'] = $request->package_height;
 
 
                 if( strtoupper($orderDetails[0]->shipping_method) == strtoupper('SMSA Express') )
@@ -156,9 +170,14 @@ class Order extends Controller
                         'updated_by' => $request->user()->id
                     ]);
                     return response()->attachment($contents);
+                } 
+                else if ( strtoupper($orderDetails[0]->shipping_method) == strtoupper('FedEx') )
+                {
+                    $FedEx = new FedEX($orderArray);
+                    $label = $FedEx->createShipment();
+                    return response()->attachment($label);
                 }
-
-                if( strtoupper($orderDetails[0]->shipping_method) == strtoupper('Key Arabia') )
+                else
                 {
                     $keyArabia = new KeyArabia($orderArray);
                     $response = $keyArabia->place_order();
@@ -194,7 +213,7 @@ class Order extends Controller
         }
         catch ( \Exception $e )
         {
-            return $e;
+            echo $e->getMessage();
         }
     } // function ends here
 

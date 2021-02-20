@@ -4,6 +4,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\ApiController;
+use App\Http\Controllers\FedExController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,3 +23,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('order', [ApiController::class, 'newOrder']);
 Route::post('order/update', [ApiController::class, 'updateOrder']);
+Route::post('fedex', [FedExController::class, 'create']);

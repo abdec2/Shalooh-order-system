@@ -54,6 +54,7 @@ class SMSA {
             $username = env('SMSA_EXPRESS_USERNAME');
             $passkey = env('SMSA_EXPRESS_PASSKEY');
             $date= date('Y-m-d').'T'.date('H:i:s');
+            $weight = ((float)$order['orderweight'] < (float)$order['orderVolweight']) ? $order['orderVolweight'] : $order['orderweight'];
 
             $response = Http::withHeaders([
                 "Content-Type" => "text/xml;charset=utf-8",
@@ -81,7 +82,7 @@ class SMSA {
                          <way:recCountry>'.$order['country'].'</way:recCountry>
                          <way:ShipDate>'.$date.'</way:ShipDate>
                          <way:parcels>1</way:parcels>
-                         <way:weight>1</way:weight>
+                         <way:weight>'.$weight.'</way:weight>
                          <way:weightUnit>KG</way:weightUnit>
                          <way:DV>0</way:DV>
                          <way:ServiceCode>SI</way:ServiceCode>
@@ -92,6 +93,7 @@ class SMSA {
             ]);
 
             $data = $response->getBody()->getContents();
+
 
             $xmlobj = simplexml_load_string($data);
             $e = $xmlobj->children('s',true)->Body->children()->GenerateAWBWithLabelResponse->children()->GenerateAWBWithLabelResult->Labels->SAWB;

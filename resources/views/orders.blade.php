@@ -206,9 +206,67 @@
                                                         @isset($trackingNo) value="{{ $trackingNo }}" @endisset
                                                         readonly>
                                                 </div>
+
+                                                <div class="col-span-6 sm:col-span-3">
+                                                    <label for="totalWeight"
+                                                        class="block text-sm font-medium text-gray-700">Total Weight (kg)</label>
+                                                    <input type="text" name="totalWeight" id="totalWeight"
+                                                        class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        @isset($totalWeight) value="{{ $totalWeight }}" @endisset
+                                                        readonly>
+                                                </div>
+
+                                                <div class="col-span-6 sm:col-span-3">
+                                                    <label for="totalVolWeight"
+                                                        class="block text-sm font-medium text-gray-700">Total Volumetric Weight (kg)</label>
+                                                    <input type="text" name="totalVolWeight" id="totalVolWeight"
+                                                        class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        @isset($totalVolWeight) value="{{ $totalVolWeight }}" @endisset
+                                                        readonly>
+                                                </div>
+
+                                                <div class="col-span-6 sm:col-span-3">
+                                                    <label for="shipping_package_size"
+                                                        class="block text-sm font-medium text-gray-700">Package size</label>
+                                                    <select id="shipping_package_size" name="shipping_package_size"
+                                                        class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-yellow-600 focus:border-yellow-600 sm:text-sm"
+                                                        onchange="loadPackageDimension(this.value)" required>
+                                                        <option value="">Select</option>
+                                                        <option value="12X25X16">L:12cm W:25cm H:16cm (1Kg)</option>
+                                                        <option value="30X22X15">L:30cm W:22cm H:15cm (2Kg)</option>
+                                                        <option value="30X44X19">L:30cm W:44cm H:19cm (5Kg)</option>
+                                                        <option value="other">Other</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-span-6 sm:col-span-1">
+                                                    <label for="length"
+                                                        class="block text-sm text-center font-medium text-gray-700">L</label>
+                                                    <input type="text" name="package_length" id="package_length"
+                                                        class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        @isset($packageLenght) value="{{ $packageLenght }}" @endisset required>
+                                                </div>
+                                                <div class="col-span-6 sm:col-span-1">
+                                                    <label for="width"
+                                                        class="block text-sm text-center font-medium text-gray-700">W</label>
+                                                    <input type="text" name="package_width" id="package_width"
+                                                        class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        @isset($packageWidth) value="{{ $packageWidth }}" @endisset required>
+                                                </div>
+                                                <div class="col-span-6 sm:col-span-1">
+                                                    <label for="height"
+                                                        class="block text-sm text-center font-medium text-gray-700">H</label>
+                                                    <input type="text" name="package_height" id="package_height"
+                                                        class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        @isset($packageHeight) value="{{ $packageHeight }}" @endisset required>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                                            <a 
+                                                href="/orders" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                Cancel
+                                            </a>
                                             <button type="submit"
                                                 class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                                 Save
