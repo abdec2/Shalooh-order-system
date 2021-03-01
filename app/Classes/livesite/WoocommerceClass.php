@@ -12,7 +12,7 @@ class WoocommerceClass {
 
     static public function UpdateOrderAtWC($order, $orderID) // update order on Woocommerce
     {
-        $endPoint = 'https://www.shalooh.com/wp-json/wc/v3/orders/'.$orderID;
+        $endPoint = env('WOOCOMMERCE_ORDER_ENDPOINT').$orderID;
         $user = env('WOOCOMMERCE_CONSUMER_KEY');
         $pass = env('WOOCOMMERCE_SECRET');
 
@@ -28,7 +28,7 @@ class WoocommerceClass {
     static public function update_shipment_tracking_number($shipment_method, $tracking_number, $order_number)
     {
         try{
-            $endPoint = 'https://www.shalooh.com/wp-json/wc-shipment-tracking/v3/orders/'.$order_number.'/shipment-trackings';
+            $endPoint = env('WOCOMMERCE_SHIPMENT_TRACK_ENDPOINT').$order_number.'/shipment-trackings';
             $user = env('WOOCOMMERCE_CONSUMER_KEY');
             $pass = env('WOOCOMMERCE_SECRET');
 

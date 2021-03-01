@@ -15,32 +15,32 @@ if(document.querySelector('#btnCreateLbl') !== null)
             loading.style.display = 'block';
 
         
-            // fetch('/create_label', {
-            //     method: 'POST', 
-            //     body: formData
-            // }).then(res=>res.blob()).then(blob=>{
-            //     const url = window.URL.createObjectURL(blob);
-            //     const a = document.createElement('a');
-            //     a.style.display = 'none';
-            //     a.href = url;
-            //     a.download = 'download.pdf';
-            //     document.body.appendChild(a);
-            //     a.click();
-            //     window.URL.revokeObjectURL(url);
-            //     // form.submit();
-
-            // }).catch(() => alert('oh no!'));
-
             fetch('/create_label', {
                 method: 'POST', 
                 body: formData
-            }).then(res=>res.json()).then(resu=>{
-                console.log(result);
-                loading.style.display = 'none';
-            }).catch(() => {
-                alert('oh no!')
-                loading.style.display = 'none';
-            });
+            }).then(res=>res.blob()).then(blob=>{
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'download.pdf';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                // form.submit();
+
+            }).catch(() => alert('oh no!'));
+
+            // fetch('/create_label', {
+            //     method: 'POST', 
+            //     body: formData
+            // }).then(res=>res.json()).then(resu=>{
+            //     console.log(result);
+            //     loading.style.display = 'none';
+            // }).catch(() => {
+            //     alert('oh no!')
+            //     loading.style.display = 'none';
+            // });
 
            
         } else {

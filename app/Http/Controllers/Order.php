@@ -193,7 +193,7 @@ class Order extends Controller
 
                     $fileName = 'download.pdf';
                     $mpdf = new \Mpdf\Mpdf([
-                        'format' => [102, 152],
+                        'format' => [101.6, 152.4],
                         'margin-left' => 0,
                         'margin-right' => 0,
                         'margin-top' => 0, 
