@@ -14,8 +14,8 @@ class CreateOrderDetails1sTable extends Migration
     public function up()
     {
         Schema::create('order_details1s', function (Blueprint $table) {
-            $table->id();
-            $table->integer('order_detail_id');
+            $table->bigInteger('id')->autoIncrement();
+            $table->bigInteger('order_detail_id');
             $table->foreign('order_detail_id')->references('id')->on('order_details');
             $table->text('reason_status_change')->nullable();
             $table->float('total_weight', 11, 2)->nullable();
