@@ -7,6 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Shipping Label</title>
     <style>
+
+    @page {
+        size: 4in 6in; /* <length>{1,2} | auto | portrait | landscape */
+            /* 'em' 'ex' and % are not allowed; length values are width height */
+        margin: 3%; /* <any of the usual CSS values for margins> */
+                    /*(% of page-box width for LR, of height for TB) */
+    }
     table.blueTable {
         font-family: Arial, Helvetica, sans-serif;
         background-color: #fff;

@@ -193,11 +193,15 @@ class Order extends Controller
 
                     $fileName = $orderDetails[0]->order_number.date('Y-m-d H:i:s');
                     $mpdf = new \Mpdf\Mpdf([
-                        'format' => [101.6, 152.4],
+                        'mode' => 'utf-8',
+                        'format' => [101, 152],
+                        'orientation'=>'p',
                         'margin-left' => 0,
                         'margin-right' => 0,
                         'margin-top' => 0, 
-                        'margin-bottom' => 0
+                        'margin-bottom' => 0,
+                        'margin_header' =>0,
+                        'margin_footer' => 0
                     ]);
                     $KeyArabiaArray = $orderArray;
                     $KeyArabiaArray['task_id'] = $task_id;
