@@ -191,7 +191,7 @@ class Order extends Controller
                         'updated_by' => $request->user()->id
                     ]);
 
-                    $fileName = 'download.pdf';
+                    $fileName = $orderDetails[0]->order_number.date('Y-m-d H:i:s');
                     $mpdf = new \Mpdf\Mpdf([
                         'format' => [101.6, 152.4],
                         'margin-left' => 0,

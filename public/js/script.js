@@ -27,7 +27,7 @@ if(document.querySelector('#btnCreateLbl') !== null)
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
-                // form.submit();
+                form.submit();
 
             }).catch(() => alert('oh no!'));
 
