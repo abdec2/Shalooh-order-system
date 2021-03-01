@@ -19,16 +19,15 @@ if(document.querySelector('#btnCreateLbl') !== null)
                 method: 'POST', 
                 body: formData
             }).then(res=>res.blob()).then(blob=>{
-                console.log(blob);
-                // const url = window.URL.createObjectURL(blob);
-                // const a = document.createElement('a');
-                // a.style.display = 'none';
-                // a.href = url;
-                // a.download = 'download.pdf';
-                // document.body.appendChild(a);
-                // a.click();
-                // window.URL.revokeObjectURL(url);
-                // form.submit();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = document.querySelector('#orderID').value+''+getCurrentDate()+'.pdf';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                form.submit();
 
             }).catch(() => alert('oh no!'));
 
@@ -95,4 +94,13 @@ function calculateVolWeight()
     }
 
 } // function ends here
+
+const getCurrentDate = ()=>{
+    let date = new Date();
+    let day = date.getDate();
+    let month = date.getMonth()+1;
+    let year = date.getFullYear();
+
+    return day+''+month+''+year;
+};
 
