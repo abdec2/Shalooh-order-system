@@ -100,7 +100,11 @@ const getCurrentDate = ()=>{
     let day = date.getDate();
     let month = date.getMonth()+1;
     let year = date.getFullYear();
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    let seconds = date.getSeconds();
 
-    return day+''+month+''+year;
+
+    return day+''+month+''+year+'_'+hours+':'+minutes+':'+seconds;
 };
 
