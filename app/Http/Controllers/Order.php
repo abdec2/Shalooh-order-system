@@ -5,9 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\OrderDetails;
 use Illuminate\Support\Facades\Http;
-use App\Classes\Shipping\SMSA;
-use App\Classes\Shipping\FedEx;
-use App\Classes\Shipping\KeyArabia;
+
+use App\Classes\Shipping\Shipment;
 use App\Classes\livesite\WoocommerceClass;
 
 
@@ -153,64 +152,18 @@ class Order extends Controller
                 $orderArray['package_width'] = $request->package_width;
                 $orderArray['package_height'] = $request->package_height;
 
+                $shipment = new Shipment($orderDetails[0]->shipping_method, $orderArray);
+                $result = $shipment->addShip();
 
-                if( strtoupper($orderDetails[0]->shipping_method) == strtoupper('SMSA Express') )
-                {
-                    $SMSA = new SMSA;
-                    $response = $SMSA->Generate_SMSA_Waybill_Number_With_File($orderArray);
-                    $contents = base64_decode($response['AwbFile']);
-                    $AwbNumber = $response['AwbNumber'];
-
-                    WoocommerceClass::update_shipment_tracking_number($orderDetails[0]->shipping_method, $AwbNumber, $orderDetails[0]->order_number);
-
-
-                    $orderUpdate = OrderDetails::find($orderDetails[0]->id);
-                    $orderUpdate->OrderDetails1()->update([
-                        'tracking_no' => $AwbNumber,
-                        'updated_by' => $request->user()->id
-                    ]);
-                    return response()->attachment($contents);
-                } 
-                else if ( strtoupper($orderDetails[0]->shipping_method) == strtoupper('FedEx') )
-                {
-                    $FedEx = new FedEX($orderArray);
-                    $label = $FedEx->createShipment();
-                    return response()->attachment($label);
-                }
-                else
-                {
-                    $keyArabia = new KeyArabia($orderArray);
-                    $response = $keyArabia->place_order();
-                    $task_id = $response->body();
-
-                    WoocommerceClass::update_shipment_tracking_number($orderDetails[0]->shipping_method, $task_id, $orderDetails[0]->order_number);
-
-                    $orderUpdate = OrderDetails::find($orderDetails[0]->id);
-                    $orderUpdate->OrderDetails1()->update([
-                        'tracking_no' => $task_id,
-                        'updated_by' => $request->user()->id
-                    ]);
-
-                    $fileName = $orderDetails[0]->order_number.date('Y-m-d H:i:s');
-                    $mpdf = new \Mpdf\Mpdf([
-                        'mode' => 'utf-8',
-                        'format' => [101, 152],
-                        'orientation'=>'p',
-                        'margin-left' => 0,
-                        'margin-right' => 0,
-                        'margin-top' => 0, 
-                        'margin-bottom' => 0,
-                        'margin_header' =>0,
-                        'margin_footer' => 0
-                    ]);
-                    $KeyArabiaArray = $orderArray;
-                    $KeyArabiaArray['task_id'] = $task_id;
-                    $html = \View::make('template.shippingLabel')->with('data', $KeyArabiaArray);
-                    $html = $html->render();
-                    $mpdf->WriteHTML($html);
-                    $mpdf->Output($fileName, 'D');
-                }
+                $orderUpdate = OrderDetails::find($orderDetails[0]->id);
+                $orderUpdate->OrderDetails1()->update([
+                    'tracking_no' => $result['tracking_number'],
+                    'updated_by' => $request->user()->id
+                ]);
                 
+                WoocommerceClass::update_shipment_tracking_number($orderDetails[0]->shipping_method, $result['tracking_number'], $orderDetails[0]->order_number);
+                
+                return response()->attachment($result['file']);
 
             }
 
