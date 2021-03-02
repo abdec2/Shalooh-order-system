@@ -105,6 +105,6 @@ const getCurrentDate = ()=>{
     let seconds = date.getSeconds();
 
 
-    return day+''+month+''+year+'_'+hours+':'+minutes+':'+seconds;
+    return day+''+month+''+year+'_'+hours+'_'+minutes+'_'+seconds;
 };
 
