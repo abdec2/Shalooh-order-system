@@ -51,7 +51,13 @@ if(document.querySelector('#btnCreateLbl') !== null)
         // form.submit();
         
     });
+
+    document.querySelector('#package_length').addEventListener('focusout', calculateVolWeight);
+    document.querySelector('#package_width').addEventListener('focusout', calculateVolWeight);
+    document.querySelector('#package_height').addEventListener('focusout', calculateVolWeight);
 }
+
+
 
 
 const loadPackageDimension = (value)=>{
@@ -71,9 +77,7 @@ const loadPackageDimension = (value)=>{
     }
 };
 
-document.querySelector('#package_length').addEventListener('focusout', calculateVolWeight);
-document.querySelector('#package_width').addEventListener('focusout', calculateVolWeight);
-document.querySelector('#package_height').addEventListener('focusout', calculateVolWeight);
+
 
 
 

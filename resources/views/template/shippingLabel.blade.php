@@ -47,6 +47,9 @@
         padding: 2px 8px;
         border-radius: 5px;
     }
+    .barcodeText {
+        display: block;
+    }
     </style>
 </head>
 
@@ -77,14 +80,15 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2">
+                <td colspan="2" align="center">
                     <p style="text-align: center;">
                         <br />
                         <br />
-                        <barcode code="{{ $data['task_id'] }}" type="C128A" />
+                        <barcode code="{{ $data['task_id'] }}" type="C39" size="2" height="0.8"/>
                         <br />
                         <br />
                     </p>
+                    <p style="text-align: center;">{{ $data['task_id'] }}</p>
                 </td>
             </tr>
         </tbody>

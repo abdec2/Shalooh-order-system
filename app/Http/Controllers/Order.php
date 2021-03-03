@@ -12,6 +12,53 @@ use App\Classes\livesite\WoocommerceClass;
 
 class Order extends Controller
 {
+    public function getOrder( Request $request, $id )
+    {
+        
+        $orderDetails = OrderDetails::where('order_number', $id)->with('OrderDetails1')->get();
+        if(count($orderDetails) > 0) {
+            $orderData = unserialize($orderDetails[0]->order_data);
+            
+            
+            $orderArray = [];
+            $orderArray['Order_ID'] = $orderDetails[0]->order_number;
+            $orderArray['shipping_method'] = $orderDetails[0]->shipping_method;
+            $orderArray['status'] = $orderDetails[0]->status;
+            $orderArray['statusOpts'] = ['pending'=>'Pending payment', 'processing' => 'Processing', 'in-transit' => 'In Transit','on-hold'=>'On hold','completed' => 'Completed','cancelled'=> 'Cancelled','refunded' => 'Refunded'];
+            $orderArray['first_name'] = $orderData['shipping']['first_name'];
+            $orderArray['last_name'] = $orderData['shipping']['last_name'];
+            $orderArray['shipping_address1'] = $orderData['shipping']['address_1'];
+            $orderArray['shipping_address2'] = $orderData['shipping']['address_2'];
+            $orderArray['city'] = $orderData['shipping']['city'];
+            $orderArray['state'] = $orderData['shipping']['state'];
+            $orderArray['postcode'] = $orderData['shipping']['postcode'];
+            $orderArray['country'] = $orderData['shipping']['country'];
+            $orderArray['countryOpt'] = ['Bahrain' => 'BH', 'Saudia Arabia' => 'SA', 'Kuwait' => 'KW','Oman' => 'OM','Qatar' => 'QA','United Arab Emirates' => 'AE'];
+            $orderArray['payment_method'] = $orderData['payment_method'];
+            $orderArray['phone'] = $orderData['billing']['phone'];
+            $orderArray['statusChangeReason'] = $orderDetails[0]->OrderDetails1->reason_status_change;
+            $orderArray['trackingNo'] = $orderDetails[0]->OrderDetails1->tracking_no;
+            $orderArray['totalWeight'] = $orderDetails[0]->OrderDetails1->total_weight;
+            $orderArray['totalVolWeight'] = $orderDetails[0]->OrderDetails1->total_vol_weight;
+
+            $orderUpdate = OrderDetails::find($orderDetails[0]->id);
+            $orderUpdate->OrderDetails1()->update([
+                'read' => 1,
+                'updated_by' => $request->user()->id
+            ]);
+
+            return view('orders', $orderArray);
+        }
+        else {
+            $res = [];
+            $res['type'] = 'error';
+            $res['msg'] = 'Record not found';
+            return view('orders', $res);
+        }
+
+
+    } // function ends here
+
     public function formSubmit( Request $request ) 
     {
         $orderDetails = OrderDetails::where('order_number', $request->orderNumber)->with('OrderDetails1')->get();
@@ -37,8 +84,8 @@ class Order extends Controller
             $orderArray['phone'] = $orderData['billing']['phone'];
             $orderArray['statusChangeReason'] = $orderDetails[0]->OrderDetails1->reason_status_change;
             $orderArray['trackingNo'] = $orderDetails[0]->OrderDetails1->tracking_no;
-            $orderArray['totalWeight'] = $orderDetails[0]->OrderDetails1->total_weight;;
-            $orderArray['totalVolWeight'] = $orderDetails[0]->OrderDetails1->total_vol_weight;;
+            $orderArray['totalWeight'] = $orderDetails[0]->OrderDetails1->total_weight;
+            $orderArray['totalVolWeight'] = $orderDetails[0]->OrderDetails1->total_vol_weight;
 
             return view('orders', $orderArray);
         }

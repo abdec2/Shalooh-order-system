@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Order;
+use App\Http\Controllers\Dashboard;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,13 +18,13 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::get('/dashboard', [Dashboard::class, 'index'])->middleware(['auth'])->name('dashboard');
 
 Route::get('/orders', function () {
     return view('orders');
 })->middleware(['auth'])->name('orders');
+
+Route::get('/orders/{id}', [Order::class, 'getOrder'])->middleware(['auth']);
 
 Route::post('/orders', [Order::class, 'formSubmit'])->middleware(['auth'])->name('orders');
 
