@@ -69,6 +69,7 @@
                 </td>
                 <td>
                     <p>SHIP DATE: {{ date('Y-m-d') }}</p>
+                    <p>ORDER NUMBER: {{ $data['Order_ID'] }}</p>
                 </td>
             </tr>
             <tr>
