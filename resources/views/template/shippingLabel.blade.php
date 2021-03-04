@@ -69,7 +69,7 @@
                 </td>
                 <td>
                     <p>SHIP DATE: {{ date('Y-m-d') }}</p>
-                    <p>ORDER NUMBER: {{ $data['Order_ID'] }}</p>
+                    <p style="font-weight: bold; font-size: 16px;" >ORDER #: {{ $data['Order_ID'] }}</p>
                 </td>
             </tr>
             <tr>
@@ -89,7 +89,7 @@
                         <br />
                         <br />
                     </p>
-                    <p style="text-align: center;">{{ $data['task_id'] }}</p>
+                    <p style="text-align: center; font-weight: bold; font-size: 16px;">{{ $data['task_id'] }}</p>
                 </td>
             </tr>
         </tbody>
