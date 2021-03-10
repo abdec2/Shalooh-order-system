@@ -20,15 +20,15 @@ class Shipment {
 
     public function addShip()
     {
-        if( strtoupper($this->shipping_method) == strtoupper('Standard') ) {
+        if( strtoupper($this->shipping_method) == strtoupper('Standard') || strtoupper($this->shipping_method) == strtoupper('SMSA Express') ) {
             $SMSA = new SMSA;
             $response = $SMSA->Generate_SMSA_Waybill_Number_With_File($this->order);
             $this->result['file'] = base64_decode($response['AwbFile']);
             $this->result['tracking_number'] = $response['AwbNumber'];
         }
         else if( strtoupper($this->shipping_method) == strtoupper('FedEX') ) {
-            $FedEx = new FedEX($this->order);
-            $label = $FedEx->createShipment();
+            // $FedEx = new FedEX($this->order);
+            // $label = $FedEx->createShipment();
             // incomplete
         }
         else if( strtoupper($this->shipping_method) == strtoupper('TNT Express') ) {

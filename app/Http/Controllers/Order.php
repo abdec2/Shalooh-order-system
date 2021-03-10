@@ -199,18 +199,21 @@ class Order extends Controller
                 $orderArray['package_width'] = $request->package_width;
                 $orderArray['package_height'] = $request->package_height;
 
-                $shipment = new Shipment($orderDetails[0]->shipping_method, $orderArray);
-                $result = $shipment->addShip();
+                if(strtoupper($orderDetails[0]->shipping_method) !== strtoupper('TNT Express'))
+                {
+                    $shipment = new Shipment($orderDetails[0]->shipping_method, $orderArray);
+                    $result = $shipment->addShip();
 
-                $orderUpdate = OrderDetails::find($orderDetails[0]->id);
-                $orderUpdate->OrderDetails1()->update([
-                    'tracking_no' => $result['tracking_number'],
-                    'updated_by' => $request->user()->id
-                ]);
-                
-                WoocommerceClass::update_shipment_tracking_number($orderDetails[0]->shipping_method, $result['tracking_number'], $orderDetails[0]->order_number);
-                
-                return response()->attachment($result['file']);
+                    $orderUpdate = OrderDetails::find($orderDetails[0]->id);
+                    $orderUpdate->OrderDetails1()->update([
+                        'tracking_no' => $result['tracking_number'],
+                        'updated_by' => $request->user()->id
+                    ]);
+                    
+                    WoocommerceClass::update_shipment_tracking_number($orderDetails[0]->shipping_method, $result['tracking_number'], $orderDetails[0]->order_number);
+                    
+                    return response()->attachment($result['file']);
+                }
 
             }
 
