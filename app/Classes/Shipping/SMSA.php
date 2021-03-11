@@ -69,7 +69,7 @@ class SMSA {
                          <way:password>'.$passkey.'</way:password>
                          <way:Reference>'.$order['Order_ID'].'</way:Reference>
                          <way:senderName>Shalooh General Trading</way:senderName>
-                         <way:senderPhone>0097333389000</way:senderPhone>
+                         <way:senderPhone>0097332225778</way:senderPhone>
                          <way:senderAddress1>Office 21 Building 101w Road 11 </way:senderAddress1>
                          <way:senderAddress2>Block 711 Tubli</way:senderAddress2>
                          <way:senderCity>Manama</way:senderCity>
