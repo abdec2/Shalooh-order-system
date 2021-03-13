@@ -1,7 +1,12 @@
 if(document.querySelector('#btnCreateLbl') !== null)
 {
     document.querySelector('#btnCreateLbl').addEventListener('click', (e)=>{
-
+        let orderstatus = document.querySelector('#orderStatus').value;
+        if(orderstatus.toUpperCase() !== 'processing'.toUpperCase())
+        {
+            alert('Label is already created for this order');
+            return;
+        }
         let form = document.querySelector('#orderForm');
         let formData = new FormData(form);
         let packageSize = document.querySelector('#shipping_package_size').value;

@@ -8,8 +8,11 @@ use FedEx\ShipService\SimpleType;
 
 class FedEx {
 
+    private $EndPoint = NULL;
+
     public function __construct($order)
     {
+        $this->EndPoint = env('FEDEX_END_POINT');
         $userCredential = new ComplexType\WebAuthenticationCredential();
         $userCredential
             ->setKey(env('FEDEX_KEY'))
@@ -126,14 +129,13 @@ class FedEx {
 
     public function createShipment()
     {
-        var_dump($this->processShipmentRequest);
-        die();
+        // var_dump($this->processShipmentRequest);
+        // die();
         $shipService = new ShipService\Request();
-        $shipService->getSoapClient()->__setLocation('https://wsbeta.fedex.com:443/web-services');
+        $shipService->getSoapClient()->__setLocation($this->EndPoint);
         $result = $shipService->getProcessShipmentReply($this->processShipmentRequest);
         
-        var_dump($result);
-        die();
+        var_dump($result);die();
         // Save .pdf label
         // file_put_contents('/path/to/label.pdf', $result->CompletedShipmentDetail->CompletedPackageDetails[0]->Label->Parts[0]->Image);
         // var_dump($result->CompletedShipmentDetail->CompletedPackageDetails[0]->Label->Parts[0]->Image);
