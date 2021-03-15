@@ -14,6 +14,8 @@ class FedExRate {
     public function __construct($order) {
         $this->EndPoint = env('FEDEX_END_POINT');
 
+        $rateRequest = new ComplexType\RateRequest();
+
         //authentication & client details
         $rateRequest->WebAuthenticationDetail->UserCredential->Key = env('FEDEX_KEY');
         $rateRequest->WebAuthenticationDetail->UserCredential->Password = env('FEDEX_PASSWORD');
@@ -24,7 +26,7 @@ class FedExRate {
 
         //version
         $rateRequest->Version->ServiceId = 'crs';
-        $rateRequest->Version->Major = 24;
+        $rateRequest->Version->Major = 28;
         $rateRequest->Version->Minor = 0;
         $rateRequest->Version->Intermediate = 0;
 
@@ -35,7 +37,7 @@ class FedExRate {
         $rateRequest->RequestedShipment->Shipper->Address->StreetLines = ['Office 21 Building 101W Road 11 Block 711 Tubli'];
         $rateRequest->RequestedShipment->Shipper->Address->City = 'Manama';
         $rateRequest->RequestedShipment->Shipper->Address->StateOrProvinceCode = '';
-        $rateRequest->RequestedShipment->Shipper->Address->PostalCode = '711';
+        $rateRequest->RequestedShipment->Shipper->Address->PostalCode = '';
         $rateRequest->RequestedShipment->Shipper->Address->CountryCode = 'BH';
 
         //recipient
@@ -52,10 +54,10 @@ class FedExRate {
         //rate request types
         $rateRequest->RequestedShipment->RateRequestTypes = [SimpleType\RateRequestType::_PREFERRED, SimpleType\RateRequestType::_LIST];
 
-        $rateRequest->RequestedShipment->PackageCount = 2; //$order['package_count'];
+        $rateRequest->RequestedShipment->PackageCount = 1; //$order['package_count'];
 
         //create package line items
-        $rateRequest->RequestedShipment->RequestedPackageLineItems = [new ComplexType\RequestedPackageLineItem(), new ComplexType\RequestedPackageLineItem()];
+        $rateRequest->RequestedShipment->RequestedPackageLineItems = [new ComplexType\RequestedPackageLineItem()];
 
         //package 1
         $rateRequest->RequestedShipment->RequestedPackageLineItems[0]->Weight->Value = 2;
@@ -63,17 +65,28 @@ class FedExRate {
         $rateRequest->RequestedShipment->RequestedPackageLineItems[0]->Dimensions->Length = 10;
         $rateRequest->RequestedShipment->RequestedPackageLineItems[0]->Dimensions->Width = 10;
         $rateRequest->RequestedShipment->RequestedPackageLineItems[0]->Dimensions->Height = 3;
-        $rateRequest->RequestedShipment->RequestedPackageLineItems[0]->Dimensions->Units = SimpleType\LinearUnits::_IN;
+        $rateRequest->RequestedShipment->RequestedPackageLineItems[0]->Dimensions->Units = SimpleType\LinearUnits::_CM;
         $rateRequest->RequestedShipment->RequestedPackageLineItems[0]->GroupPackageCount = 1;
 
-        //package 2
-        $rateRequest->RequestedShipment->RequestedPackageLineItems[1]->Weight->Value = 5;
-        $rateRequest->RequestedShipment->RequestedPackageLineItems[1]->Weight->Units = SimpleType\WeightUnits::_LB;
-        $rateRequest->RequestedShipment->RequestedPackageLineItems[1]->Dimensions->Length = 20;
-        $rateRequest->RequestedShipment->RequestedPackageLineItems[1]->Dimensions->Width = 20;
-        $rateRequest->RequestedShipment->RequestedPackageLineItems[1]->Dimensions->Height = 10;
-        $rateRequest->RequestedShipment->RequestedPackageLineItems[1]->Dimensions->Units = SimpleType\LinearUnits::_IN;
-        $rateRequest->RequestedShipment->RequestedPackageLineItems[1]->GroupPackageCount = 1;
+
+        $rateServiceRequest = new Request();
+        $rateServiceRequest->getSoapClient()->__setLocation($this->EndPoint);
+
+        $rateReply = $rateServiceRequest->getGetRatesReply($rateRequest); // send true as the 2nd argument to return the SoapClient's stdClass response.
+
+        if (!empty($rateReply->RateReplyDetails)) {
+            foreach ($rateReply->RateReplyDetails as $rateReplyDetail) {
+                var_dump($rateReplyDetail->ServiceType);
+                if (!empty($rateReplyDetail->RatedShipmentDetails)) {
+                    foreach ($rateReplyDetail->RatedShipmentDetails as $ratedShipmentDetail) {
+                        var_dump($ratedShipmentDetail->ShipmentRateDetail->RateType . ": " . $ratedShipmentDetail->ShipmentRateDetail->TotalNetChargeWithDutiesAndTaxes->Amount . " " . $ratedShipmentDetail->ShipmentRateDetail->TotalNetChargeWithDutiesAndTaxes->Currency);
+                    }
+                }
+                echo "<hr />";
+            }
+        }
+        
+        print_r($rateReply);
 
     }    
 }
