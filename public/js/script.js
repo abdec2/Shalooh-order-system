@@ -39,10 +39,11 @@ if(document.querySelector('#btnCreateLbl') !== null)
             // fetch('/create_label', {
             //     method: 'POST', 
             //     body: formData
-            // }).then(res=>res.json()).then(resu=>{
+            // }).then(res=>res.json()).then(result=>{
             //     console.log(result);
             //     loading.style.display = 'none';
-            // }).catch(() => {
+            // }).catch((e) => {
+            //     console.log(e)
             //     alert('oh no!')
             //     loading.style.display = 'none';
             // });

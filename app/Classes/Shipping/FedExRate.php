@@ -12,15 +12,15 @@ class FedExRate {
     private $EndPoint = NULL;
 
     public function __construct($order) {
-        $this->EndPoint = env('FEDEX_END_POINT');
+        $this->EndPoint = env('FEDEX_PRODUCTION_END_POINT');
 
         $rateRequest = new ComplexType\RateRequest();
 
         //authentication & client details
-        $rateRequest->WebAuthenticationDetail->UserCredential->Key = env('FEDEX_KEY');
-        $rateRequest->WebAuthenticationDetail->UserCredential->Password = env('FEDEX_PASSWORD');
-        $rateRequest->ClientDetail->AccountNumber = env('FEDEX_ACCOUNT_NUMBER');
-        $rateRequest->ClientDetail->MeterNumber = env('FEDEX_METER_NUMBER');
+        $rateRequest->WebAuthenticationDetail->UserCredential->Key = env('FEDEX_PRODUCTION_KEY');
+        $rateRequest->WebAuthenticationDetail->UserCredential->Password = env('FEDEX_PRODUCTION_PASSWORD');
+        $rateRequest->ClientDetail->AccountNumber = env('FEDEX_PRODUCTION_ACCOUNT_NUMBER');
+        $rateRequest->ClientDetail->MeterNumber = env('FEDEX_PRODUCTION_METER_NUMBER');
 
         $rateRequest->TransactionDetail->CustomerTransactionId = $order['Order_ID'];
 
@@ -52,7 +52,7 @@ class FedExRate {
         $rateRequest->RequestedShipment->ShippingChargesPayment->PaymentType = SimpleType\PaymentType::_SENDER;
 
         //rate request types
-        $rateRequest->RequestedShipment->RateRequestTypes = [SimpleType\RateRequestType::_PREFERRED, SimpleType\RateRequestType::_LIST];
+        $rateRequest->RequestedShipment->RateRequestTypes = [SimpleType\RateRequestType::_PREFERRED];
 
         $rateRequest->RequestedShipment->PackageCount = 1; //$order['package_count'];
 
@@ -67,7 +67,6 @@ class FedExRate {
         $rateRequest->RequestedShipment->RequestedPackageLineItems[0]->Dimensions->Height = 3;
         $rateRequest->RequestedShipment->RequestedPackageLineItems[0]->Dimensions->Units = SimpleType\LinearUnits::_CM;
         $rateRequest->RequestedShipment->RequestedPackageLineItems[0]->GroupPackageCount = 1;
-
 
         $rateServiceRequest = new Request();
         $rateServiceRequest->getSoapClient()->__setLocation($this->EndPoint);

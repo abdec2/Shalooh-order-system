@@ -70,6 +70,12 @@
                 <td>
                     <p>SHIP DATE: {{ date('Y-m-d') }}</p>
                     <p style="font-weight: bold; font-size: 16px;" >ORDER #: {{ $data['Order_ID'] }}</p>
+                    @if($data['payment_method'] == 'cod')
+                        <p><b>Payment Method:</b> Cash on Delivery</p>
+                        <p><b>Amount:</b> BD {{ $data['order_amount'] }}</p>
+                    @else
+                        <p style="font-weight: bold; font-size: 16px;" >Already Paid</p>
+                    @endif
                 </td>
             </tr>
             <tr>
