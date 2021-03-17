@@ -52,7 +52,7 @@ class FedExRate {
         $rateRequest->RequestedShipment->ShippingChargesPayment->PaymentType = SimpleType\PaymentType::_SENDER;
 
         //rate request types
-        $rateRequest->RequestedShipment->RateRequestTypes = [SimpleType\RateRequestType::_PREFERRED];
+        $rateRequest->RequestedShipment->RateRequestTypes = [SimpleType\RateRequestType::_LIST];
 
         $rateRequest->RequestedShipment->PackageCount = 1; //$order['package_count'];
 
@@ -67,12 +67,15 @@ class FedExRate {
         $rateRequest->RequestedShipment->RequestedPackageLineItems[0]->Dimensions->Height = 3;
         $rateRequest->RequestedShipment->RequestedPackageLineItems[0]->Dimensions->Units = SimpleType\LinearUnits::_CM;
         $rateRequest->RequestedShipment->RequestedPackageLineItems[0]->GroupPackageCount = 1;
-
+        // var_dump($rateRequest);
+        // die();
         $rateServiceRequest = new Request();
         $rateServiceRequest->getSoapClient()->__setLocation($this->EndPoint);
-
+        // var_dump($rateServiceRequest);
+        // die();
         $rateReply = $rateServiceRequest->getGetRatesReply($rateRequest); // send true as the 2nd argument to return the SoapClient's stdClass response.
-
+        // var_dump($rateReply);
+        // die();
         if (!empty($rateReply->RateReplyDetails)) {
             foreach ($rateReply->RateReplyDetails as $rateReplyDetail) {
                 var_dump($rateReplyDetail->ServiceType);
