@@ -44,9 +44,9 @@ class FedEx {
         $shipperContact = new ComplexType\Contact();
         $shipperContact
             ->setCompanyName('Shalooh General Trade')
-            ->setEMailAddress('mohamed.hasan@shalooh.com')
-            ->setPersonName('Mohamed Hasan')
-            ->setPhoneNumber(('0097333389000'));
+            ->setEMailAddress('care@shalooh.com')
+            ->setPersonName('support')
+            ->setPhoneNumber(('0097338101017'));
         
         $shipper = new ComplexType\Party();
         $shipper
