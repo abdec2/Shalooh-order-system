@@ -20,33 +20,33 @@ if(document.querySelector('#btnCreateLbl') !== null)
             loading.style.display = 'block';
 
         
-            // fetch('/create_label', {
-            //     method: 'POST', 
-            //     body: formData
-            // }).then(res=>res.blob()).then(blob=>{
-            //     const url = window.URL.createObjectURL(blob);
-            //     const a = document.createElement('a');
-            //     a.style.display = 'none';
-            //     a.href = url;
-            //     a.download = document.querySelector('#orderID').value+'_'+getCurrentDate()+'.pdf';
-            //     document.body.appendChild(a);
-            //     a.click();
-            //     window.URL.revokeObjectURL(url);
-            //     form.submit();
-
-            // }).catch(() => alert('oh no!'));
-
             fetch('/create_label', {
                 method: 'POST', 
                 body: formData
-            }).then(res=>res.json()).then(result=>{
-                console.log(result);
-                loading.style.display = 'none';
-            }).catch((e) => {
-                console.log(e)
-                alert('oh no!')
-                loading.style.display = 'none';
-            });
+            }).then(res=>res.blob()).then(blob=>{
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = document.querySelector('#orderID').value+'_'+getCurrentDate()+'.pdf';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                form.submit();
+
+            }).catch(() => alert('oh no!'));
+
+            // fetch('/create_label', {
+            //     method: 'POST', 
+            //     body: formData
+            // }).then(res=>res.json()).then(result=>{
+            //     console.log(result);
+            //     loading.style.display = 'none';
+            // }).catch((e) => {
+            //     console.log(e)
+            //     alert('oh no!')
+            //     loading.style.display = 'none';
+            // });
 
            
         } else {
