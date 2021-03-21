@@ -271,10 +271,12 @@
                                                 class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                                 Save
                                             </button>
+                                            @if($shipping_method !== 'TNT Express2 - 10 working days')
                                             <button type="button"
                                                 id="btnCreateLbl" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                                 Create Label and Save
                                             </button>
+                                            @endif
                                         </div>
                                     </div>
                                 </form>

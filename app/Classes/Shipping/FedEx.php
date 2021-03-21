@@ -119,6 +119,51 @@ class FedEx {
         ]);
         $requestedShipment->setShippingChargesPayment($shippingChargesPayment);
         
+        $CustomsClearanceDetail = [
+            'DutiesPayment' => new ComplexType\Payment([
+              'PaymentType' => 'RECIPIENT', // valid values RECIPIENT, SENDER and THIRD_PARTY
+          //    'Payor' => new ComplexType\Payor([
+          //      'ResponsibleParty' => new ComplexType\Party([
+          //        'AccountNumber' => FEDEX_ACCOUNT_NUMBER, // OPTIONAL  
+          //        'Contact' => new ComplexType\Contact([]),
+          //        'Address' => new ComplexType\Address([])
+          //      ])  
+          //    ])
+            ]),
+            'DocumentContent' => 'NON_DOCUMENTS',
+            'CustomsValue' => new ComplexType\Money([
+              'Currency' => 'BHD',
+              'Amount' => $order['order_amount']
+            ]),
+            'Commodities' => [
+              [
+                'NumberOfPieces' => 1,
+                'Description' => 'Products from Shalooh.com',
+                'CountryOfManufacture' => 'Various Countries',
+                'Weight' => array(
+                  'Units' => 'KG',
+                  'Value' => $shipWeight
+                ),
+                'Quantity' => 4,
+                'QuantityUnits' => 'EA',
+                'UnitPrice' => array(
+                  'Currency' => 'BHD',
+                  'Amount' => 10.000
+                ),
+                'CustomsValue' => array(
+                  'Currency' => 'BHD',
+                  'Amount' => 10.000
+                )
+              ]
+            ],
+            'ExportDetail' => new ComplexType\ExportDetail([
+              'B13AFilingOption' => 'NOT_REQUIRED'
+            ])
+          ];
+
+
+        $requestedShipment->setCustomsClearanceDetail(new ComplexType\CustomsClearanceDetail($CustomsClearanceDetail));
+        
         $this->processShipmentRequest = new ComplexType\ProcessShipmentRequest();
         $this->processShipmentRequest->setWebAuthenticationDetail($webAuthenticationDetail);
         $this->processShipmentRequest->setClientDetail($clientDetail);
@@ -134,13 +179,17 @@ class FedEx {
         $shipService = new ShipService\Request();
         $shipService->getSoapClient()->__setLocation($this->EndPoint);
         $result = $shipService->getProcessShipmentReply($this->processShipmentRequest);
+        print_r($result); die();
+
+        $ship['tracking_number'] = $result->CompletedShipmentDetail->CompletedPackageDetails[0]->TrackingIds[0]->TrackingNumber;
+        $ship['file'] = $result->CompletedShipmentDetail->CompletedPackageDetails[0]->Label->Parts[0]->Image;
         
-        var_dump($result);die();
+        // print_r($result->CompletedShipmentDetail->CompletedPackageDetails[0]->Label->Parts[0]);die();
         // Save .pdf label
         // file_put_contents('/path/to/label.pdf', $result->CompletedShipmentDetail->CompletedPackageDetails[0]->Label->Parts[0]->Image);
         // var_dump($result->CompletedShipmentDetail->CompletedPackageDetails[0]->Label->Parts[0]->Image);
 
-        // return $result->CompletedShipmentDetail->CompletedPackageDetails[0]->Label->Parts[0]->Image;
+        return $ship;
 
     } // function ends here
 

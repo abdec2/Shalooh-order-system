@@ -20,18 +20,20 @@ class Shipment {
 
     public function addShip()
     {
-        if( strtoupper($this->shipping_method) == strtoupper('Standard') || strtoupper($this->shipping_method) == strtoupper('SMSA Express') ) {
+        if( strtoupper($this->shipping_method) == strtoupper('Standard (1-2 working days)') || strtoupper($this->shipping_method) == strtoupper('SMSA Express (4-10 working days)') ) {
             $SMSA = new SMSA;
             $response = $SMSA->Generate_SMSA_Waybill_Number_With_File($this->order);
             $this->result['file'] = base64_decode($response['AwbFile']);
             $this->result['tracking_number'] = $response['AwbNumber'];
         }
-        else if( strtoupper($this->shipping_method) == strtoupper('FedEX') ) {
-            // $FedEx = new FedEX($this->order);
-            // $label = $FedEx->createShipment();
-            // incomplete
+        else if( strtoupper($this->shipping_method) == strtoupper('FedEx International Priority') ) {
+            $FedEx = new FedEX($this->order);
+            $label = $FedEx->createShipment();
+            $this->result['file'] = $label['file'];
+            $this->result['tracking_number'] = $label['tracking_number'];
+
         }
-        else if( strtoupper($this->shipping_method) == strtoupper('TNT Express') ) {
+        else if( strtoupper($this->shipping_method) == strtoupper('TNT Express2 - 10 working days') ) {
             // incomplete
         }
         else {
