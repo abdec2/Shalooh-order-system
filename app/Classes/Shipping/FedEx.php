@@ -12,19 +12,19 @@ class FedEx {
 
     public function __construct($order)
     {
-        $this->EndPoint = env('FEDEX_END_POINT');
+        $this->EndPoint = env('FEDEX_PRODUCTION_END_POINT');
         $userCredential = new ComplexType\WebAuthenticationCredential();
         $userCredential
-            ->setKey(env('FEDEX_KEY'))
-            ->setPassword(env('FEDEX_PASSWORD'));
+            ->setKey(env('FEDEX_PRODUCTION_KEY'))
+            ->setPassword(env('FEDEX_PRODUCTION_PASSWORD'));
 
         $webAuthenticationDetail = new ComplexType\WebAuthenticationDetail();
         $webAuthenticationDetail->setUserCredential($userCredential);
 
         $clientDetail = new ComplexType\ClientDetail();
         $clientDetail
-            ->setAccountNumber(env('FEDEX_ACCOUNT_NUMBER'))
-            ->setMeterNumber(env('FEDEX_METER_NUMBER'));
+            ->setAccountNumber(env('FEDEX_PRODUCTION_ACCOUNT_NUMBER'))
+            ->setMeterNumber(env('FEDEX_PRODUCTION_METER_NUMBER'));
 
         $version = new ComplexType\VersionId();
         $version
@@ -50,14 +50,14 @@ class FedEx {
         
         $shipper = new ComplexType\Party();
         $shipper
-            ->setAccountNumber(env('FEDEX_ACCOUNT_NUMBER'))
+            ->setAccountNumber(env('FEDEX_PRODUCTION_ACCOUNT_NUMBER'))
             ->setAddress($shipperAddress)
             ->setContact($shipperContact);
 
 
         $recipientAddress = new ComplexType\Address();
         $recipientAddress
-            ->setStreetLines([$order['shipping_address1'].' '.$order['shipping_address2']])
+            ->setStreetLines([$order['shipping_address1'],$order['shipping_address2']])
             ->setCity($order['city'])
             ->setStateOrProvinceCode('')
             ->setPostalCode('')
@@ -75,7 +75,7 @@ class FedEx {
         
         $labelSpecification = new ComplexType\LabelSpecification();
         $labelSpecification
-            ->setLabelStockType(new SimpleType\LabelStockType(SimpleType\LabelStockType::_PAPER_4X6))
+            ->setLabelStockType(new SimpleType\LabelStockType(SimpleType\LabelStockType::_STOCK_4X6))
             ->setImageType(new SimpleType\ShippingDocumentImageType(SimpleType\ShippingDocumentImageType::_PDF))
             ->setLabelFormatType(new SimpleType\LabelFormatType(SimpleType\LabelFormatType::_COMMON2D));
         
@@ -139,20 +139,20 @@ class FedEx {
               [
                 'NumberOfPieces' => 1,
                 'Description' => 'Products from Shalooh.com',
-                'CountryOfManufacture' => 'US',
+                'CountryOfManufacture' => 'BH',
                 'Weight' => array(
                   'Units' => 'KG',
                   'Value' => $shipWeight
                 ),
-                'Quantity' => 4,
+                'Quantity' => 1,
                 'QuantityUnits' => 'EA',
                 'UnitPrice' => array(
                   'Currency' => 'BHD',
-                  'Amount' => 10.000
+                  'Amount' => 1
                 ),
                 'CustomsValue' => array(
                   'Currency' => 'BHD',
-                  'Amount' => 10.000
+                  'Amount' => 1
                 )
               ]
             ],
@@ -174,7 +174,7 @@ class FedEx {
 
     public function createShipment()
     {
-        // var_dump($this->processShipmentRequest);
+        // print_r($this->processShipmentRequest);
         // die();
         $shipService = new ShipService\Request();
         $shipService->getSoapClient()->__setLocation($this->EndPoint);

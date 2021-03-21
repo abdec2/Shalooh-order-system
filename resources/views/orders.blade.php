@@ -183,7 +183,7 @@
                                                         class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-yellow-600 focus:border-yellow-600 sm:text-sm"
                                                         required>
                                                         @foreach($countryOpt as $key => $Opt)
-                                                        <option value="{{ $Opt }}" @if($countryOpt==$country)
+                                                        <option value="{{ $Opt }}" @if($Opt==$country)
                                                             selected @endif>{{ucfirst($key)}}</option>
                                                         @endforeach
                                                     </select>
@@ -234,7 +234,7 @@
                                                         <option value="">Select</option>
                                                         <option value="12X25X16">L:12cm W:25cm H:16cm (1Kg)</option>
                                                         <option value="30X22X15">L:30cm W:22cm H:15cm (2Kg)</option>
-                                                        <option value="30X44X19">L:30cm W:44cm H:19cm (5Kg)</option>
+                                                        <option value="30X44X18.5">L:30cm W:44cm H:18.5cm (5Kg)</option>
                                                         <option value="other">Other</option>
                                                     </select>
                                                 </div>

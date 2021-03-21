@@ -124,7 +124,7 @@ class Order extends Controller
                 $WcData['billing']['phone'] = ($request->contactNo !== null ) ? $request->contactNo : '';
                 
                 WoocommerceClass::UpdateOrderAtWC( json_encode($WcData), $request->orderID );
-
+                
                 $orderData = serialize($orderData);
 
                 $orderUpdate = OrderDetails::find($orderDetails[0]->id);
@@ -204,17 +204,17 @@ class Order extends Controller
                     $shipment = new Shipment($orderDetails[0]->shipping_method, $orderArray);
                     $result = $shipment->addShip();
 
-                    print_r($result);
+                    // print_r($result);
 
-                    // $orderUpdate = OrderDetails::find($orderDetails[0]->id);
-                    // $orderUpdate->OrderDetails1()->update([
-                    //     'tracking_no' => $result['tracking_number'],
-                    //     'updated_by' => $request->user()->id
-                    // ]);
+                    $orderUpdate = OrderDetails::find($orderDetails[0]->id);
+                    $orderUpdate->OrderDetails1()->update([
+                        'tracking_no' => $result['tracking_number'],
+                        'updated_by' => $request->user()->id
+                    ]);
                     
-                    // WoocommerceClass::update_shipment_tracking_number($orderDetails[0]->shipping_method, $result['tracking_number'], $orderDetails[0]->order_number);
+                    WoocommerceClass::update_shipment_tracking_number($orderDetails[0]->shipping_method, $result['tracking_number'], $orderDetails[0]->order_number);
                     
-                    // return response()->attachment($result['file']);
+                    return response()->attachment($result['file']);
                 }
 
             }
