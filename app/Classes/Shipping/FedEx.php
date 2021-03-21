@@ -139,7 +139,7 @@ class FedEx {
               [
                 'NumberOfPieces' => 1,
                 'Description' => 'Products from Shalooh.com',
-                'CountryOfManufacture' => 'Various Countries',
+                'CountryOfManufacture' => 'US',
                 'Weight' => array(
                   'Units' => 'KG',
                   'Value' => $shipWeight
