@@ -68,6 +68,7 @@ class Order extends Controller
             
             $orderArray = [];
             $orderArray['Order_ID'] = $orderDetails[0]->order_number;
+            $orderArray['Order_Key'] = $orderData['order_key'];
             $orderArray['shipping_method'] = $orderDetails[0]->shipping_method;
             $orderArray['status'] = $orderDetails[0]->status;
             $orderArray['statusOpts'] = ['pending'=>'Pending payment', 'processing' => 'Processing', 'in-transit' => 'In Transit','on-hold'=>'On hold','completed' => 'Completed','cancelled'=> 'Cancelled','refunded' => 'Refunded'];
@@ -123,7 +124,7 @@ class Order extends Controller
                 $WcData['shipping']['country'] = ($request->shipping_country !== null ) ? $request->shipping_country : '';
                 $WcData['billing']['phone'] = ($request->contactNo !== null ) ? $request->contactNo : '';
                 
-                WoocommerceClass::UpdateOrderAtWC( json_encode($WcData), $request->orderID );
+                // WoocommerceClass::UpdateOrderAtWC( json_encode($WcData), $request->orderID );
                 
                 $orderData = serialize($orderData);
 
@@ -183,13 +184,13 @@ class Order extends Controller
                 $orderArray['status'] = 'in-transit';
                 $orderArray['first_name'] = $orderData['shipping']['first_name'];
                 $orderArray['last_name'] = $orderData['shipping']['last_name'];
-                $orderArray['shipping_address1'] = $orderData['shipping']['address_1'];
-                $orderArray['shipping_address2'] = $orderData['shipping']['address_2'];
-                $orderArray['city'] = $orderData['shipping']['city'];
-                $orderArray['state'] = $orderData['shipping']['state'];
-                $orderArray['postcode'] = $orderData['shipping']['postcode'];
-                $orderArray['country'] = $orderData['shipping']['country'];
-                $orderArray['phone'] = $orderData['billing']['phone'];
+                $orderArray['shipping_address1'] = $request->shipping_address1;
+                $orderArray['shipping_address2'] = $request->shipping_address2;
+                $orderArray['city'] = $request->city;
+                $orderArray['state'] = $request->state;
+                $orderArray['postcode'] = $request->postal_code;
+                $orderArray['country'] = $request->shipping_country;
+                $orderArray['phone'] = $request->contactNo;
                 $orderArray['payment_method'] = $orderData['payment_method'];
                 $orderArray['order_amount'] = $orderData['total'];
                 $orderArray['email'] = $orderData['billing']['email'];
@@ -198,6 +199,7 @@ class Order extends Controller
                 $orderArray['package_length'] = $request->package_length;
                 $orderArray['package_width'] = $request->package_width;
                 $orderArray['package_height'] = $request->package_height;
+                $orderArray['orderData'] = $orderData;
 
                 if(strtoupper($orderDetails[0]->shipping_method) !== strtoupper('TNT Express'))
                 {
@@ -212,7 +214,7 @@ class Order extends Controller
                         'updated_by' => $request->user()->id
                     ]);
                     
-                    WoocommerceClass::update_shipment_tracking_number($orderDetails[0]->shipping_method, $result['tracking_number'], $orderDetails[0]->order_number);
+                    // WoocommerceClass::update_shipment_tracking_number($orderDetails[0]->shipping_method, $result['tracking_number'], $orderDetails[0]->order_number);
                     
                     return response()->attachment($result['file']);
                 }

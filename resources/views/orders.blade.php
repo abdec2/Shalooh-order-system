@@ -261,8 +261,41 @@
                                                         @isset($packageHeight) value="{{ $packageHeight }}" @endisset required>
                                                 </div>
                                             </div>
+                                            <div class="py-8 grid grid-cols-12 gap-1">
+                                                <div class="col-span-12 sm:col-span-3">
+                                                    <a 
+                                                        href="https://www.shalooh.com/wp-admin/admin-ajax.php?action=generate_wpo_wcpdf&document_type=invoice&order_ids={{$Order_ID}}&order_key={{$Order_Key}}" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                        Get Invoice
+                                                    </a>
+                                                </div>
+                                                <div class="col-span-12 sm:col-span-3">
+                                                    <a 
+                                                        href="/orders" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                        Cancel
+                                                    </a>
+                                                </div>
+                                                <div class="col-span-12 sm:col-span-3">
+                                                    <button type="submit"
+                                                        class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                        Save
+                                                    </button>
+                                                </div>
+                                                <div class="col-span-12 sm:col-span-3">
+                                                    @if($shipping_method !== 'TNT Express2 - 10 working days')
+                                                    <button type="button"
+                                                        id="btnCreateLbl" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                        Create Label
+                                                    </button>
+                                                    @endif
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                                        
+                                        <!-- <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                                            <a 
+                                                href="/orders" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                Get Invoice
+                                            </a>
                                             <a 
                                                 href="/orders" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                                 Cancel
@@ -277,7 +310,7 @@
                                                 Create Label and Save
                                             </button>
                                             @endif
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </form>
                             </div>
