@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Order;
 use App\Http\Controllers\Dashboard;
+use App\Http\Controllers\Reports;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,9 +25,14 @@ Route::get('/orders', function () {
     return view('orders');
 })->middleware(['auth'])->name('orders');
 
+Route::get('/reports', function () {
+    return view('reports');
+})->middleware(['auth'])->name('reports');
+
 Route::get('/orders/{id}', [Order::class, 'getOrder'])->middleware(['auth']);
 
 Route::post('/orders', [Order::class, 'formSubmit'])->middleware(['auth'])->name('orders');
+Route::post('/reports', [Reports::class, 'index'])->middleware(['auth'])->name('reports');
 
 Route::post('/save_order', [Order::class, 'save_order'])->middleware(['auth'])->name('save_order');
 
