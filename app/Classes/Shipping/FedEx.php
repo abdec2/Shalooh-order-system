@@ -222,7 +222,7 @@ class FedEx {
         $shipService = new ShipService\Request();
         $shipService->getSoapClient()->__setLocation($this->EndPoint);
         $result = $shipService->getProcessShipmentReply($this->processShipmentRequest);
-        print_r($result->CompletedShipmentDetail->ShipmentDocuments[0]->Parts[0]->Image); 
+        print_r($result); 
         die();
 
         $ship['tracking_number'] = $result->CompletedShipmentDetail->CompletedPackageDetails[0]->TrackingIds[0]->TrackingNumber;
