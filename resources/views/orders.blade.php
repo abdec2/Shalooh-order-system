@@ -63,7 +63,7 @@
                                             <div class="grid grid-cols-6 gap-6">
                                                 <div class="col-span-6 sm:col-span-6 lg:col-span-2">
                                                     <label for="orderID"
-                                                        class="block text-sm font-medium text-gray-700">Order ID</label>
+                                                        class="block text-sm font-medium text-gray-700">Order ID*</label>
                                                     <input type="number" name="orderID" id="orderID"
                                                         class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                         readonly value="{{ $Order_ID }}">
@@ -72,7 +72,7 @@
                                                 <div class="col-span-6 sm:col-span-3 lg:col-span-2">
                                                     <label for="fname"
                                                         class="block text-sm font-medium text-gray-700">First
-                                                        Name</label>
+                                                        Name*</label>
                                                     <input type="text" name="fname" id="fname"
                                                         class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                         readonly value="{{ $first_name }}">
@@ -81,7 +81,7 @@
                                                 <div class="col-span-6 sm:col-span-3 lg:col-span-2">
                                                     <label for="lname"
                                                         class="block text-sm font-medium text-gray-700">Last
-                                                        Name</label>
+                                                        Name*</label>
                                                     <input type="text" name="lname" id="lname"
                                                         autocomplete="postal-code"
                                                         class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
@@ -90,7 +90,7 @@
                                                 <div class="col-span-6 sm:col-span-3">
                                                     <label for="shippingMethod"
                                                         class="block text-sm font-medium text-gray-700">Shipping
-                                                        Method</label>
+                                                        Method*</label>
                                                     <input type="text" name="shippingMethod" id="shippingMethod"
                                                         class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                         value="{{ $shipping_method }}" readonly>
@@ -99,7 +99,7 @@
                                                 <div class="col-span-6 sm:col-span-3">
                                                     <label for="orderStatus"
                                                         class="block text-sm font-medium text-gray-700">Order
-                                                        Status</label>
+                                                        Status*</label>
                                                     <select id="orderStatus" name="orderStatus"
                                                         class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-yellow-600 focus:border-yellow-600 sm:text-sm"
                                                         required>
@@ -114,7 +114,7 @@
                                                 <div class="col-span-6">
                                                     <label for="statusChangeReason"
                                                         class="block text-sm font-medium text-gray-700">Reason for
-                                                        changing status</label>
+                                                        changing status*</label>
                                                     <input type="text" name="statusChangeReason" id="statusChangeReason"
                                                         class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                         @isset($statusChangeReason) value="{{ $statusChangeReason }}"
@@ -124,7 +124,7 @@
                                                 <div class="col-span-6">
                                                     <label for="shipping_address1"
                                                         class="block text-sm font-medium text-gray-700">Shipping Address
-                                                        1</label>
+                                                        1*</label>
                                                     <input type="text" name="shipping_address1" id="shipping_address1"
                                                         class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                         value="{{ $shipping_address1 }}">
@@ -142,7 +142,7 @@
                                                 <div class="col-span-6 sm:col-span-3">
                                                     <label for="contactNo"
                                                         class="block text-sm font-medium text-gray-700">Contact
-                                                        No</label>
+                                                        No*</label>
                                                     <input type="number" name="contactNo" id="contactNo"
                                                         class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                         value="{{ $phone }}" required>
@@ -150,7 +150,7 @@
 
                                                 <div class="col-span-6 sm:col-span-6 lg:col-span-2">
                                                     <label for="city"
-                                                        class="block text-sm font-medium text-gray-700">City</label>
+                                                        class="block text-sm font-medium text-gray-700">City*</label>
                                                     <!-- <input type="text" name="city" id="city" class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $city }}"> -->
 
                                                     <select id="city" name="city"
@@ -187,7 +187,7 @@
 
                                                 <div class="col-span-6">
                                                     <label for="shipping_country"
-                                                        class="block text-sm font-medium text-gray-700">Country</label>
+                                                        class="block text-sm font-medium text-gray-700">Country*</label>
                                                     <select id="shipping_country" name="shipping_country"
                                                         class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-yellow-600 focus:border-yellow-600 sm:text-sm"
                                                         required>
@@ -201,7 +201,7 @@
                                                 <div class="col-span-6 sm:col-span-3">
                                                     <label for="payment_method"
                                                         class="block text-sm font-medium text-gray-700">Payment
-                                                        Method</label>
+                                                        Method*</label>
                                                     <input type="text" name="payment_method" id="payment_method"
                                                         class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                         value="{{ $payment_method }}" readonly>
@@ -218,7 +218,7 @@
 
                                                 <div class="col-span-6 sm:col-span-3">
                                                     <label for="totalWeight"
-                                                        class="block text-sm font-medium text-gray-700">Total Weight (kg)</label>
+                                                        class="block text-sm font-medium text-gray-700">Total Weight (kg)*</label>
                                                     <input type="text" name="totalWeight" id="totalWeight"
                                                         class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                         @isset($totalWeight) value="{{ $totalWeight }}" @endisset
@@ -227,7 +227,7 @@
 
                                                 <div class="col-span-6 sm:col-span-3">
                                                     <label for="totalVolWeight"
-                                                        class="block text-sm font-medium text-gray-700">Total Volumetric Weight (kg)</label>
+                                                        class="block text-sm font-medium text-gray-700">Total Volumetric Weight (kg)*</label>
                                                     <input type="text" name="totalVolWeight" id="totalVolWeight"
                                                         class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                         @isset($totalVolWeight) value="{{ $totalVolWeight }}" @endisset
@@ -236,7 +236,7 @@
 
                                                 <div class="col-span-6 sm:col-span-3">
                                                     <label for="shipping_package_size"
-                                                        class="block text-sm font-medium text-gray-700">Package size</label>
+                                                        class="block text-sm font-medium text-gray-700">Package size*</label>
                                                     <select id="shipping_package_size" name="shipping_package_size"
                                                         class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-yellow-600 focus:border-yellow-600 sm:text-sm"
                                                         onchange="loadPackageDimension(this.value)" required>
@@ -250,21 +250,21 @@
 
                                                 <div class="col-span-6 sm:col-span-1">
                                                     <label for="length"
-                                                        class="block text-sm text-center font-medium text-gray-700">L</label>
+                                                        class="block text-sm text-center font-medium text-gray-700">L*</label>
                                                     <input type="text" name="package_length" id="package_length"
                                                         class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                         @isset($packageLenght) value="{{ $packageLenght }}" @endisset required>
                                                 </div>
                                                 <div class="col-span-6 sm:col-span-1">
                                                     <label for="width"
-                                                        class="block text-sm text-center font-medium text-gray-700">W</label>
+                                                        class="block text-sm text-center font-medium text-gray-700">W*</label>
                                                     <input type="text" name="package_width" id="package_width"
                                                         class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                         @isset($packageWidth) value="{{ $packageWidth }}" @endisset required>
                                                 </div>
                                                 <div class="col-span-6 sm:col-span-1">
                                                     <label for="height"
-                                                        class="block text-sm text-center font-medium text-gray-700">H</label>
+                                                        class="block text-sm text-center font-medium text-gray-700">H*</label>
                                                     <input type="text" name="package_height" id="package_height"
                                                         class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                         @isset($packageHeight) value="{{ $packageHeight }}" @endisset required>

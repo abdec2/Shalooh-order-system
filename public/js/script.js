@@ -13,8 +13,9 @@ if(document.querySelector('#btnCreateLbl') !== null)
         let package_length = document.querySelector('#package_length').value;
         let package_width = document.querySelector('#package_width').value;
         let package_height = document.querySelector('#package_height').value;
+        let contactNo = document.querySelector('#contactNo').value;
         
-        if(packageSize !== '' && package_length !== '' && package_width !== '' && package_height !== ''){
+        if(packageSize !== '' && package_length !== '' && package_width !== '' && package_height !== '' && contactNo !== ''){
             let loading = document.querySelector('.loading');
             document.querySelector('#orderStatus').value='in-transit';
             loading.style.display = 'block';
@@ -54,7 +55,7 @@ if(document.querySelector('#btnCreateLbl') !== null)
             
            
         } else {
-            alert('Please select package size.');
+            alert('Please fill required fields.');
         }
 
         // form.action = '/create_label';
