@@ -15,19 +15,19 @@ class FedEx {
         // dd($order);
         $line_items = $order['orderData']['line_items'];
         
-        $this->EndPoint = env('FEDEX_PRODUCTION_END_POINT');
+        $this->EndPoint = env('FEDEX_END_POINT');
         $userCredential = new ComplexType\WebAuthenticationCredential();
         $userCredential
-            ->setKey(env('FEDEX_PRODUCTION_KEY'))
-            ->setPassword(env('FEDEX_PRODUCTION_PASSWORD'));
+            ->setKey(env('FEDEX_KEY'))
+            ->setPassword(env('FEDEX_PASSWORD'));
 
         $webAuthenticationDetail = new ComplexType\WebAuthenticationDetail();
         $webAuthenticationDetail->setUserCredential($userCredential);
 
         $clientDetail = new ComplexType\ClientDetail();
         $clientDetail
-            ->setAccountNumber(env('FEDEX_PRODUCTION_ACCOUNT_NUMBER'))
-            ->setMeterNumber(env('FEDEX_PRODUCTION_METER_NUMBER'));
+            ->setAccountNumber(env('FEDEX_ACCOUNT_NUMBER'))
+            ->setMeterNumber(env('FEDEX_METER_NUMBER'));
 
         $transactionDetail = new ComplexType\TransactionDetail();
         $transactionDetail->setCustomerTransactionId($order['Order_ID']);
@@ -56,7 +56,7 @@ class FedEx {
         
         $shipper = new ComplexType\Party();
         $shipper
-            ->setAccountNumber(env('FEDEX_PRODUCTION_ACCOUNT_NUMBER'))
+            ->setAccountNumber(env('FEDEX_ACCOUNT_NUMBER'))
             ->setAddress($shipperAddress)
             ->setContact($shipperContact);
 
