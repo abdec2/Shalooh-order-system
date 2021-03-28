@@ -145,7 +145,7 @@
                                                         No</label>
                                                     <input type="number" name="contactNo" id="contactNo"
                                                         class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                        value="{{ $phone }}">
+                                                        value="{{ $phone }}" required>
                                                 </div>
 
                                                 <div class="col-span-6 sm:col-span-6 lg:col-span-2">
