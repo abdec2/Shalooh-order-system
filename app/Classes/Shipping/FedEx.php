@@ -12,6 +12,9 @@ class FedEx {
 
     public function __construct($order)
     {
+        // dd($order);
+        $line_items = $order['orderData']['line_items'];
+        
         $this->EndPoint = env('FEDEX_PRODUCTION_END_POINT');
         $userCredential = new ComplexType\WebAuthenticationCredential();
         $userCredential
@@ -26,6 +29,9 @@ class FedEx {
             ->setAccountNumber(env('FEDEX_PRODUCTION_ACCOUNT_NUMBER'))
             ->setMeterNumber(env('FEDEX_PRODUCTION_METER_NUMBER'));
 
+        $transactionDetail = new ComplexType\TransactionDetail();
+        $transactionDetail->setCustomerTransactionId($order['Order_ID']);
+        
         $version = new ComplexType\VersionId();
         $version
             ->setMajor(26)
@@ -118,55 +124,92 @@ class FedEx {
             $packageLineItem1
         ]);
         $requestedShipment->setShippingChargesPayment($shippingChargesPayment);
+        $specialServiceRequested = new ComplexType\ShipmentSpecialServicesRequested();
+        $specialServiceRequested->setSpecialServiceTypes(SimpleType\ShipmentSpecialServiceType::_ELECTRONIC_TRADE_DOCUMENTS);
+        $requestedShipment->setSpecialServicesRequested($specialServiceRequested);
+        
+        $ShippingDocumentFormat = new ComplexType\ShippingDocumentFormat();
+        $ShippingDocumentFormat
+                    ->setImageType(SimpleType\ShippingDocumentImageType::_PDF)
+                    ->setStockType(SimpleType\ShippingDocumentStockType::_PAPER_LETTER)
+                    ->setProvideInstructions('1');
+        
+        $CustomerImageUsage1 = new ComplexType\CustomerImageUsage();
+        $CustomerImageUsage1
+            ->setType(SimpleType\CustomerImageUsageType::_LETTER_HEAD)
+            ->setId('IMAGE_1');
+
+        $CustomerImageUsage2 = new ComplexType\CustomerImageUsage();
+        $CustomerImageUsage2
+            ->setType(SimpleType\CustomerImageUsageType::_SIGNATURE)
+            ->setId('IMAGE_2');
+
+        $CommercialInvoiceDetail = new ComplexType\CommercialInvoiceDetail();
+        $CommercialInvoiceDetail
+                    ->setFormat($ShippingDocumentFormat)
+                    ->setCustomerImageUsages([$CustomerImageUsage1, $CustomerImageUsage2]);
+
+        $ShippingDocumentSpecification = new ComplexType\ShippingDocumentSpecification();
+        $ShippingDocumentSpecification->setShippingDocumentTypes([SimpleType\RequestedShippingDocumentType::_COMMERCIAL_INVOICE]);
+        $ShippingDocumentSpecification->setCommercialInvoiceDetail($CommercialInvoiceDetail);
+        
+        $Commodities = [];
+        $PriceExShipping = 0;
+
+        foreach($line_items as $product)
+        {
+            $UnitPrice = new ComplexType\Money();
+            $UnitPrice
+                    ->setCurrency('BHD')
+                    ->setAmount($product['price']);
+
+            $customsValue = new ComplexType\Money();
+            $customsValue
+                    ->setCurrency('BHD')
+                    ->setAmount($product['total']);
+            
+            $weight = new ComplexType\Weight();
+            $weight
+                    ->setUnits(SimpleType\WeightUnits::_KG)
+                    ->setValue((float)$shipWeight/count($line_items));
+
+            $Commodity = new ComplexType\Commodity();
+            $Commodity
+                    ->setNumberOfPieces($product['quantity'])
+                    ->setDescription($product['name'])
+                    ->setCountryOfManufacture('CN')
+                    ->setWeight($weight)
+                    ->setQuantity($product['quantity'])
+                    ->setQuantityUnits('cm')
+                    ->setUnitPrice($UnitPrice)
+                    ->setCustomsValue($customsValue);
+            
+            array_push($Commodities, $Commodity);
+            $PriceExShipping = $PriceExShipping + (float)$product['total'];
+        }
         
         $CustomsClearanceDetail = [
             'DutiesPayment' => new ComplexType\Payment([
-              'PaymentType' => 'RECIPIENT', // valid values RECIPIENT, SENDER and THIRD_PARTY
-          //    'Payor' => new ComplexType\Payor([
-          //      'ResponsibleParty' => new ComplexType\Party([
-          //        'AccountNumber' => FEDEX_ACCOUNT_NUMBER, // OPTIONAL  
-          //        'Contact' => new ComplexType\Contact([]),
-          //        'Address' => new ComplexType\Address([])
-          //      ])  
-          //    ])
+              'PaymentType' => 'RECIPIENT', 
             ]),
             'DocumentContent' => 'NON_DOCUMENTS',
             'CustomsValue' => new ComplexType\Money([
               'Currency' => 'BHD',
-              'Amount' => $order['order_amount']
+              'Amount' => $PriceExShipping
             ]),
-            'Commodities' => [
-              [
-                'NumberOfPieces' => 1,
-                'Description' => 'Products from Shalooh.com',
-                'CountryOfManufacture' => 'BH',
-                'Weight' => array(
-                  'Units' => 'KG',
-                  'Value' => $shipWeight
-                ),
-                'Quantity' => 1,
-                'QuantityUnits' => 'EA',
-                'UnitPrice' => array(
-                  'Currency' => 'BHD',
-                  'Amount' => 1
-                ),
-                'CustomsValue' => array(
-                  'Currency' => 'BHD',
-                  'Amount' => 1
-                )
-              ]
-            ],
+            'Commodities' => $Commodities,
             'ExportDetail' => new ComplexType\ExportDetail([
-              'B13AFilingOption' => 'NOT_REQUIRED'
+              'ExportComplianceStatement' => '30.37(f)'
             ])
           ];
 
-
+        $requestedShipment->setShippingDocumentSpecification($ShippingDocumentSpecification);
         $requestedShipment->setCustomsClearanceDetail(new ComplexType\CustomsClearanceDetail($CustomsClearanceDetail));
         
         $this->processShipmentRequest = new ComplexType\ProcessShipmentRequest();
         $this->processShipmentRequest->setWebAuthenticationDetail($webAuthenticationDetail);
         $this->processShipmentRequest->setClientDetail($clientDetail);
+        $this->processShipmentRequest->setTransactionDetail($transactionDetail);
         $this->processShipmentRequest->setVersion($version);
         $this->processShipmentRequest->setRequestedShipment($requestedShipment);
 
@@ -179,11 +222,14 @@ class FedEx {
         $shipService = new ShipService\Request();
         $shipService->getSoapClient()->__setLocation($this->EndPoint);
         $result = $shipService->getProcessShipmentReply($this->processShipmentRequest);
-        // print_r($result); die();
+        // print_r($result->CompletedShipmentDetail->ShipmentDocuments[0]->Parts[0]->Image); die();
 
         $ship['tracking_number'] = $result->CompletedShipmentDetail->CompletedPackageDetails[0]->TrackingIds[0]->TrackingNumber;
         $ship['file'] = $result->CompletedShipmentDetail->CompletedPackageDetails[0]->Label->Parts[0]->Image;
-        
+        if(isset($result->CompletedShipmentDetail->ShipmentDocuments[0]->Parts[0]->Image))
+        {
+            $ship['COMM_INV'] = $result->CompletedShipmentDetail->ShipmentDocuments[0]->Parts[0]->Image;
+        }
         // print_r($result->CompletedShipmentDetail->CompletedPackageDetails[0]->Label->Parts[0]);die();
         // Save .pdf label
         // file_put_contents('/path/to/label.pdf', $result->CompletedShipmentDetail->CompletedPackageDetails[0]->Label->Parts[0]->Image);

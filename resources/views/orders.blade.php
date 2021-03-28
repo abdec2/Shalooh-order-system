@@ -151,9 +151,18 @@
                                                 <div class="col-span-6 sm:col-span-6 lg:col-span-2">
                                                     <label for="city"
                                                         class="block text-sm font-medium text-gray-700">City</label>
-                                                    <input type="text" name="city" id="city"
-                                                        class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                        value="{{ $city }}">
+                                                    <!-- <input type="text" name="city" id="city" class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $city }}"> -->
+
+                                                    <select id="city" name="city"
+                                                        class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-yellow-600 focus:border-yellow-600 sm:text-sm"
+                                                        required>
+                                                        @foreach($cityOpt as $key => $Opt)
+                                                        <option value="{{ $Opt }}" @if($Opt==$city)
+                                                            selected @endif>{{ucfirst($key)}}</option>
+                                                        @endforeach
+                                                    </select>
+
+
                                                 </div>
 
                                                 <div class="col-span-6 sm:col-span-3 lg:col-span-2">

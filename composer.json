@@ -15,6 +15,7 @@
         "jeremy-dunn/php-fedex-api-wrapper": "^5.0",
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
+        "madnest/madzipper": "^1.1",
         "mpdf/mpdf": "^8.0"
     },
     "require-dev": {

@@ -28,7 +28,11 @@ if(document.querySelector('#btnCreateLbl') !== null)
                 const a = document.createElement('a');
                 a.style.display = 'none';
                 a.href = url;
-                a.download = document.querySelector('#orderID').value+'_'+getCurrentDate()+'.pdf';
+                if(blob.type == "application/zip"){
+                    a.download = document.querySelector('#orderID').value+'_'+getCurrentDate()+'.zip';
+                } else {
+                    a.download = document.querySelector('#orderID').value+'_'+getCurrentDate()+'.pdf';
+                }
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
@@ -47,7 +51,7 @@ if(document.querySelector('#btnCreateLbl') !== null)
             //     alert('oh no!')
             //     loading.style.display = 'none';
             // });
-
+            
            
         } else {
             alert('Please select package size.');

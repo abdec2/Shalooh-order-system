@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\OrderDetails;
+use App\Models\WpCountries;
+use App\Models\WpCities;
 use Illuminate\Support\Facades\Http;
 
 use App\Classes\Shipping\Shipment;
@@ -61,11 +63,22 @@ class Order extends Controller
 
     public function formSubmit( Request $request ) 
     {
+        $WpCountries = WpCountries::all();
+        $countryOpt = [];
+        foreach($WpCountries as $country)
+        {
+            $countryOpt[$country->country] = $country->country_code;
+        }
         $orderDetails = OrderDetails::where('order_number', $request->orderNumber)->with('OrderDetails1')->get();
         if(count($orderDetails) > 0) {
             $orderData = unserialize($orderDetails[0]->order_data);
-            
-            
+            $cities = WpCities::join('wp_countries', 'wp_cities.country_id','=','wp_countries.id')->select('wp_cities.*')->where('wp_countries.country_code', '=',$orderData['shipping']['country'])->get();
+            $cityOpt = [];
+            foreach($cities->all() as $city)
+            {
+                $cityOpt[$city->cities] = $city->cities;
+            }            
+
             $orderArray = [];
             $orderArray['Order_ID'] = $orderDetails[0]->order_number;
             $orderArray['Order_Key'] = $orderData['order_key'];
@@ -77,10 +90,11 @@ class Order extends Controller
             $orderArray['shipping_address1'] = $orderData['shipping']['address_1'];
             $orderArray['shipping_address2'] = $orderData['shipping']['address_2'];
             $orderArray['city'] = $orderData['shipping']['city'];
+            $orderArray['cityOpt'] = $cityOpt;
             $orderArray['state'] = $orderData['shipping']['state'];
             $orderArray['postcode'] = $orderData['shipping']['postcode'];
             $orderArray['country'] = $orderData['shipping']['country'];
-            $orderArray['countryOpt'] = ['Bahrain' => 'BH', 'Saudia Arabia' => 'SA', 'Kuwait' => 'KW','Oman' => 'OM','Qatar' => 'QA','United Arab Emirates' => 'AE'];
+            $orderArray['countryOpt'] = $countryOpt;
             $orderArray['payment_method'] = $orderData['payment_method'];
             $orderArray['phone'] = $orderData['billing']['phone'];
             $orderArray['statusChangeReason'] = $orderDetails[0]->OrderDetails1->reason_status_change;
@@ -124,7 +138,7 @@ class Order extends Controller
                 $WcData['shipping']['country'] = ($request->shipping_country !== null ) ? $request->shipping_country : '';
                 $WcData['billing']['phone'] = ($request->contactNo !== null ) ? $request->contactNo : '';
                 
-                // WoocommerceClass::UpdateOrderAtWC( json_encode($WcData), $request->orderID );
+                WoocommerceClass::UpdateOrderAtWC( json_encode($WcData), $request->orderID );
                 
                 $orderData = serialize($orderData);
 
@@ -214,9 +228,23 @@ class Order extends Controller
                         'updated_by' => $request->user()->id
                     ]);
                     
-                    // WoocommerceClass::update_shipment_tracking_number($orderDetails[0]->shipping_method, $result['tracking_number'], $orderDetails[0]->order_number);
+                    WoocommerceClass::update_shipment_tracking_number($orderDetails[0]->shipping_method, $result['tracking_number'], $orderDetails[0]->order_number);
+
+                    if(isset($result['COMM_INV']))
+                    {   
+                        $zipper = new \Madnest\Madzipper\Madzipper;
+                        $zipper->make('test.zip')->addString($orderArray['Order_ID'].'_AWB_'.date('Y-m-d H:i:s').'.pdf', $result['file'])->addString($orderArray['Order_ID'].'_COMM_INV_'.date('Y-m-d H:i:s').'.pdf', $result['COMM_INV'])->close();
+
+                        $zipfile = file_get_contents('test.zip');
+
+                        unlink('test.zip');
+
+                        return response()->sendZip($zipfile);                        
+
+                    } else {
+                        return response()->attachment($result['file']);
+                    }
                     
-                    return response()->attachment($result['file']);
                 }
 
             }
@@ -226,6 +254,18 @@ class Order extends Controller
         {
             echo $e->getMessage();
         }
+    } // function ends here
+
+    function getAjaxCities(Request $request)
+    {
+        $cities = WpCities::join('wp_countries', 'wp_cities.country_id','=','wp_countries.id')->select('wp_cities.*')->where('wp_countries.country_code', '=',$request->shipping_country)->get();
+        $cityOpt = '';
+        foreach($cities->all() as $city)
+        {
+            $cityOpt .= '<option value="'.$city->cities.'">'.$city->cities.'</option>';
+        }
+
+        return response()->json($cityOpt);
     } // function ends here
 
 

@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
         <link rel="stylesheet" href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
         <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.0/css/buttons.dataTables.min.css">
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
         
 
@@ -47,6 +48,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
         <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js"></script>
         <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.print.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script>
             $(document).ready(function() {
 
@@ -61,6 +63,29 @@
 
                     } )
                     .columns.adjust();
+
+                if( document.querySelector('#city') !== undefined && document.querySelector('#city') !== null ){
+                    $('#city').select2({
+                        selectionCssClass: ':all:',
+                    });
+
+                    
+                    document.querySelector('#shipping_country').addEventListener('change', e=>{
+                        let shipping_country = document.querySelector('#shipping_country option:checked').value;
+                        let _token = document.querySelector('input[name="_token"]').value;
+                        
+                        let data = new FormData();
+                        data.append('shipping_country', shipping_country);
+                        data.append('_token', _token);
+                        fetch('orders/get_cities', {
+                            method: 'POST',
+                            body: data
+
+                        }).then(res=>res.json()).then(result=>{
+                            document.querySelector('#city').innerHTML = result;
+                        }).catch(e=>console.log(e));
+                    });
+                }
             } );
         </script>
     </body>

@@ -31,6 +31,10 @@ class Shipment {
             $label = $FedEx->createShipment();
             $this->result['file'] = $label['file'];
             $this->result['tracking_number'] = $label['tracking_number'];
+            if(isset($label['COMM_INV']))
+            {
+                $this->result['COMM_INV'] = $label['COMM_INV'];
+            }
 
         }
         else if( strtoupper($this->shipping_method) == strtoupper('TNT Express2 - 10 working days') ) {

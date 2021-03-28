@@ -32,7 +32,9 @@ Route::get('/reports', function () {
 Route::get('/orders/{id}', [Order::class, 'getOrder'])->middleware(['auth']);
 
 Route::post('/orders', [Order::class, 'formSubmit'])->middleware(['auth'])->name('orders');
+Route::post('/orders/get_cities', [Order::class, 'getAjaxCities'])->middleware(['auth'])->name('getAjaxCities');
 Route::post('/reports', [Reports::class, 'index'])->middleware(['auth'])->name('reports');
+
 
 Route::post('/save_order', [Order::class, 'save_order'])->middleware(['auth'])->name('save_order');
 

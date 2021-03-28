@@ -37,5 +37,16 @@ class AppServiceProvider extends ServiceProvider
             return \Response::make($content, 200, $headers);
         
         });
+
+        \Response::macro('sendZip', function ($content) {
+
+            $headers = [
+                'Content-type'        => 'application/zip',
+                'Content-Disposition' => 'sendZip; filename="download.zip"',
+            ];
+        
+            return \Response::make($content, 200, $headers);
+        
+        });
     }
 }
