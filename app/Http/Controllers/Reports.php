@@ -27,7 +27,14 @@ class Reports extends Controller
             $page=$page+1;
         } while(count($response) !== 0);
 
-        return view('reports')->with('totalRecords', $totalRecords);
+        if(strtoupper($request->reportType) == strtoupper('standard'))
+        {
+            return view('reports')->with('totalRecords', $totalRecords);
+        } 
+        if(strtoupper($request->reportType) == strtoupper('tax'))
+        {
+            return view('reports')->with('taxRecords', $totalRecords);
+        }
 
         
     }

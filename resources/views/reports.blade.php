@@ -16,19 +16,29 @@
                                 @csrf
                                 <div class="lg:w-full">
                                     <div class="flex flex-wrap">
-                                        <div class="p-2 w-full sm:w-1/3">
+                                        <div class="p-2 w-full sm:w-1/4">
                                             <div class="relative">
                                                 <label for="fromDate" class="block text-sm font-medium text-gray-700">Date From:</label>
-                                                <input type="date" id="fromDate" name="fromDate" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-yellow-500 focus:bg-white focus:ring-2 focus:ring-yellow-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" placeholder="Enter order number" required>
+                                                <input type="date" id="fromDate" name="fromDate" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-yellow-500 focus:bg-white focus:ring-2 focus:ring-yellow-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" required>
                                             </div>
                                         </div>
-                                        <div class="p-2 w-full sm:w-1/3">
+                                        <div class="p-2 w-full sm:w-1/4">
                                             <div class="relative">
                                                 <label for="toDate" class="block text-sm font-medium text-gray-700">Date to:</label>
-                                                <input type="date" id="toDate" name="toDate" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-yellow-500 focus:bg-white focus:ring-2 focus:ring-yellow-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" placeholder="Enter order number" required>
+                                                <input type="date" id="toDate" name="toDate" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-yellow-500 focus:bg-white focus:ring-2 focus:ring-yellow-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" required>
                                             </div>
                                         </div>
-                                        <div class="p-2 w-full sm:w-1/3">
+                                        <div class="p-2 w-full sm:w-1/4">
+                                            <div class="relative">
+                                                <label for="reportType" class="block text-sm font-medium text-gray-700">Report Type:</label>
+                                                <select id="reportType" name="reportType" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-yellow-500 focus:bg-white focus:ring-2 focus:ring-yellow-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" required>
+                                                    <option value="">Select</option>
+                                                    <option value="standard">Standard Report</option>
+                                                    <option value="tax">Tax Report</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="p-2 w-full sm:w-1/4">
                                             <div class="relative">
                                                 <label class="block text-sm font-medium text-gray-700"> </label>
                                                 <button class="text-white bg-yellow-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-md w-full">Submit</button>
@@ -72,27 +82,52 @@
                             <tbody>
                         @foreach($totalRecords as $order)
                                 <tr>
-                                    <td>{{ $order->id }}</td>
-                                    <td>{{ $order->date_created }}</td>
-                                    <td>{{ $order->billing->first_name.' '.$order->billing->last_name }}</td>
-                                    <td>{{ $order->billing->email }}</td>
-                                    <td>{{ $order->billing->phone }}</td>
-                                    <td>{{ $order->shipping_lines[0]->method_title }}</td>
-                                    <td>{{ $order->payment_method_title }}</td>
-                                    <td>{{ (float)$order->total - (float)$order->total_tax - (float)$order->shipping_total }}</td>
-                                    <td>{{ $order->total_tax }}</td>
-                                    <td>{{ $order->total }}</td>
-                                    <td>{{ $order->status }}</td>
+                                    <td align="center">{{ $order->id }}</td>
+                                    <td align="center">{{ $order->date_created }}</td>
+                                    <td align="center">{{ $order->billing->first_name.' '.$order->billing->last_name }}</td>
+                                    <td align="center">{{ $order->billing->email }}</td>
+                                    <td align="center">{{ $order->billing->phone }}</td>
+                                    <td align="center">{{ $order->shipping_lines[0]->method_title }}</td>
+                                    <td align="center">{{ $order->payment_method_title }}</td>
+                                    <td align="center">{{ (float)$order->total - (float)$order->total_tax - (float)$order->shipping_total }}</td>
+                                    <td align="center">{{ $order->total_tax }}</td>
+                                    <td align="center">{{ $order->total }}</td>
+                                    <td align="center">{{ $order->status }}</td>
                                 </tr>
-                                
                         @endforeach
                             </tbody>
-                            
                         </table>
-
-                        
-                        
                     @endisset
+
+                    @isset($taxRecords)
+                        <table id="report" class="stripe hover" style="width:100%; padding-top: 1em;  padding-bottom: 1em;">
+                            <thead>
+                                <tr>
+                                    <th data-priority="2">Date</th>
+                                    <th data-priority="1">Invoice #</th>
+                                    <th data-priority="8">Taxable Amount</th>
+                                    <th data-priority="9">Tax Amount</th>
+                                    <th data-priority="10">Grand Total</th>
+                                    <th data-priority="11">Order Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                        @foreach($taxRecords as $order)
+                            @if(strtoupper($order->status) == strtoupper('completed'))
+                                <tr>
+                                    <td align="center">{{ explode("T",$order->date_created)[0] }}</td>
+                                    <td align="center">{{ $order->id }}</td>
+                                    <td align="center">{{ (float)$order->total - (float)$order->total_tax - (float)$order->shipping_total }}</td>
+                                    <td align="center">{{ $order->total_tax }}</td>
+                                    <td align="center">{{ $order->total }}</td>
+                                    <td align="center">{{ $order->status }}</td>
+                                </tr>
+                            @endif
+                        @endforeach
+                            </tbody>
+                        </table>
+                    @endisset
+
                 </div>
             </div>
         </div>
