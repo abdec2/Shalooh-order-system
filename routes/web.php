@@ -41,3 +41,4 @@ Route::post('/save_order', [Order::class, 'save_order'])->middleware(['auth'])->
 Route::post('/create_label', [Order::class, 'create_label'])->middleware(['auth'])->name('create_label');
 
 require __DIR__.'/auth.php';
+require __DIR__.'/wms.php';
