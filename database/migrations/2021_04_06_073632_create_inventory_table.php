@@ -17,6 +17,7 @@ class CreateInventoryTable extends Migration
             $table->id();
             $table->integer('bin_id');
             $table->foreign('bin_id')->references('id')->on('bins');
+            $table->integer('quantity');
             $table->timestamps();
         });
     }

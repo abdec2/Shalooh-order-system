@@ -18,10 +18,7 @@ class CreateProductsTable extends Migration
             $table->string('label');
             $table->string('sku')->unique();
             $table->integer('parent');
-            $table->bigInteger('stock_qty');
             $table->string('image_path', 255);
-            $table->integer('bin_id')->nullable();
-            $table->foreign('bin_id')->references('id')->on('bins');
             $table->timestamps();
         });
     }

@@ -1,6 +1,8 @@
 <?php 
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\wms\products\ProductsController;
+use App\Http\Controllers\wms\location\BinController;
 
 Route::get('/wms/products/list', function () {
     return view('wms/wms');
@@ -21,3 +23,7 @@ Route::get('/wms/orders/processing', function () {
 Route::get('/wms/orders/shipped', function () {
     return view('wms/shippedOrders');
 })->middleware(['auth'])->name('wms.orders.shipped');
+
+Route::post('/wms/products/add_products', [ProductsController::class, 'add_products'])->middleware(['auth'])->name('wms.products.add_products');
+
+// Route::get('/wms/generate/bins', [BinController::class, 'generateBins'])->middleware(['auth'])->name('wms.generate.bins');

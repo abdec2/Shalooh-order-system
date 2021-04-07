@@ -20,7 +20,6 @@ class CreateBinsTable extends Migration
             $table->foreign('location_id')->references('id')->on('locations');
             $table->integer('product_id')->nullable();
             $table->foreign('product_id')->references('id')->on('products');
-            $table->integer('product_quantity')->nullable();
             $table->bigInteger('tag_number')->nullable();
             $table->timestamps();
         });

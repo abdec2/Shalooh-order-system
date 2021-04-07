@@ -17,7 +17,7 @@
                                 </div>
                                 <div class="col-span-12 md:col-span-9 ">
                                     <div class="mx-4 my-2 p-4 text-2xl">
-                                        <h1>Pending Orders</h2>
+                                        <h1 class="uppercase">Pending Orders</h2>
                                     </div>
                                 </div>
                             </div>

@@ -17,10 +17,11 @@
                                 </div>
                                 <div class="col-span-12 md:col-span-9 ">
                                     <div class="mx-4 my-2 p-4 text-2xl">
-                                        <h1>Add Products</h2>
+                                        <h1 class="uppercase">Add / Update Products</h2>
+                                        <p class="text-xs">Upload csv file to add or update products</p>
                                     </div>
 
-                                    <form action="/wms/products/add_products" method="POST">
+                                    <form action="{{ route('wms.products.add_products') }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         <div class="mx-4 my-2 p-4">
                                             <div class="flex flex-wrap -m-2">
@@ -29,6 +30,8 @@
                                                         <input type="file" id="csvUpload" name="csvUpload"
                                                             class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-yellow-500 focus:bg-white focus:ring-2 focus:ring-yellow-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                                                             placeholder="Enter order number" required>
+                                                        <input type="checkbox" id="override" name="override" >
+                                                        <label for="override" class="text-xs">Override stocks</label>
                                                     </div>
                                                 </div>
                                                 <div class="p-2 w-full md:w-1/3 ">
