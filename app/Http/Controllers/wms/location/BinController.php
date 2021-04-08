@@ -18,11 +18,13 @@ class BinController extends Controller
         {
             $location_id = $location->id;
             $address = $location->location;
-            $tag = $this->generateLocationTag($address);
+            $address = explode('-', $address);
+            $addressString = $address[0].'-'.$address[1].$address[2];
+            $tag = $this->generateLocationTag($addressString);
             $bins = [];
             for($i = 0; $i < 100; $i++)
             {
-                $binLocation = $address.(($i < 10) ? '0'.$i : $i);
+                $binLocation = $addressString.(($i < 10) ? '0'.$i : $i);
                 $tagNumber = $tag.(($i < 10) ? '0'.$i : $i);
                 $data = [
                     'id' => NULL,

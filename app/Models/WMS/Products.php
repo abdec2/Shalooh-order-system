@@ -14,6 +14,9 @@ class Products extends Model
     protected $table = 'products';
     protected $primaryKey = 'id';
 
+    protected $fillable = ['label', 'sku'];
+
+
     function Bins() {
         return $this->hasMany(Bins::class, 'product_id');
     }

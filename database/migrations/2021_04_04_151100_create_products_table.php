@@ -17,8 +17,8 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->string('label');
             $table->string('sku')->unique();
-            $table->integer('parent');
-            $table->string('image_path', 255);
+            $table->integer('parent')->nullable();
+            $table->string('image_path', 255)->nullable();
             $table->timestamps();
         });
     }
