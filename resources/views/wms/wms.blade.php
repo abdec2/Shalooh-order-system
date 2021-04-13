@@ -2,6 +2,9 @@
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Warehouse Management System') }}
+            @if (session('status'))
+                <p class="text-xs text-green-400">Products Added Successfully...</p>
+            @endif
         </h2>
     </x-slot>
 
@@ -12,6 +15,7 @@
                     <section class="text-gray-600 body-font relative">
                         <div class="container px-5 py-20 mx-auto">
                             <div class="grid grid-cols-12 gap-4">
+                            
                                 <div class="col-span-12 md:col-span-3">
                                     <x-side-menu />
                                 </div>

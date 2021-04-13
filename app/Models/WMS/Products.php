@@ -14,7 +14,7 @@ class Products extends Model
     protected $table = 'products';
     protected $primaryKey = 'id';
 
-    protected $fillable = ['label', 'sku'];
+    protected $fillable = ['label', 'sku', 'parent', 'image_path'];
 
 
     function Bins() {

@@ -20,6 +20,9 @@ class CreateLocationsTable extends Migration
             $table->foreign('location_category_id')->references('id')->on('location_categories');
             $table->integer('total_bins')->nullable();
             $table->integer('bins_in_use')->nullable();
+            $table->bigInteger('bin_init');
+            $table->bigInteger('bin_ending');
+
             $table->timestamps();
         });
     }
