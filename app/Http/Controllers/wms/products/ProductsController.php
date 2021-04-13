@@ -23,6 +23,7 @@ class ProductsController extends Controller
             {
                 Excel::import(new ProductImportOverrideStocks, $upload);
             } else {
+                Excel::import(new ProductImport, $upload);
             }
             return redirect('/wms/products/list')->with('status', 'Products Added Successfully');
         } else
