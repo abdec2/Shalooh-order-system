@@ -23,6 +23,32 @@
                                     <div class="mx-4 my-2 p-4 text-2xl">
                                         <h1 class="uppercase">List Products</h2>
                                     </div>
+                                    @if(count($products) > 0)
+                                    <table class="table-fixed ">
+                                        <thead>
+                                        <tr>
+                                            <th class="w-1/6 p-2">Image</th>
+                                            <th class="w-1/2 text-left p-2">Label</th>
+                                            <th class="w-1/6 p-2">SKU</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($products as $product)
+                                            <tr >
+                                                <td class="p-2"><img src="{{ $product->image_path }}" /></td>
+                                                <td class="p-2">{{ $product->label }}</td>
+                                                <td class="p-2 text-center">{{ $product->sku }}</td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                    {{ $products->links() }}
+                                    @else
+                                        <div class="mx-4 my-2 p-4 text-sm">
+                                        <p>Nothing Found. Sorry.</p>
+                                        </div>
+                                        
+                                    @endif
                                 </div>
                             </div>
                         </div>

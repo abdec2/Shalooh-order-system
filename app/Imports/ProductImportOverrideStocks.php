@@ -49,7 +49,7 @@ class ProductImportOverrideStocks implements ToCollection, WithHeadingRow
                         "label" => $row['label'],
                         "sku" => $row['parent_sku'],
                         "parent" => NULL, 
-                        "image_path" => NULL
+                        "image_path" => asset('/img/placeholder.jpg')
                     ];
                     $parentSkuId = Products::create($parentSkuData)->id;
                     Log::channel('addProduct')->info($row['parent_sku'].' SKU Created');

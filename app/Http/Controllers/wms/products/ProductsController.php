@@ -8,6 +8,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ProductImport;
 use App\Imports\ProductImportOverrideStocks;
 
+use App\Models\WMS\Products;
+
 
 class ProductsController extends Controller
 {   
@@ -33,5 +35,12 @@ class ProductsController extends Controller
             return view('wms/addProducts', $result);
         }
 
+    } // function ends here
+
+    function ListProducts(Request $request)
+    {
+        $products = Products::paginate(10);
+
+        return view('wms/wms', compact('products'));
     } // function ends here
 }

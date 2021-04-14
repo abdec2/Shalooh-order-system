@@ -6,17 +6,15 @@ use App\Http\Controllers\wms\location\BinController;
 use App\Http\Controllers\wms\location\LocationController;
 use Illuminate\Support\Facades\Log;
 
-Route::get('/wms/products/list', function () {
-    return view('wms/wms');
-})->middleware(['auth'])->name('wms.list_products');
+use App\Http\Controllers\wms\orders\OrderController;
+
+Route::get('/wms/products/list', [ProductsController::class, 'ListProducts'])->middleware(['auth'])->name('wms.list_products');
 
 Route::get('/wms/products/add', function () {
     return view('wms/addProducts');
 })->middleware(['auth'])->name('wms.add_products');
 
-Route::get('/wms/orders/pending', function () {
-    return view('wms/pendingOrders');
-})->middleware(['auth'])->name('wms.orders.pending');
+Route::get('/wms/orders/pending', [OrderController::class, 'listPendingOrders'])->middleware(['auth'])->name('wms.orders.pending');
 
 Route::get('/wms/orders/processing', function () {
     return view('wms/processOrders');
