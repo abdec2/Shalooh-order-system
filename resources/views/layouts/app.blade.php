@@ -19,7 +19,24 @@
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
+        <!-- include alertify.css -->
+        <link rel="stylesheet" href="{{ asset('css/css/alertify.min.css') }}">
+
+        <!-- include semantic ui theme  -->
+        <link rel="stylesheet" href="{{ asset('css/css/themes/default.min.css') }}">
+
         <!-- Scripts -->
+        <!-- include alertify script -->
+        <script src="{{ asset('js/alertify.min.js') }}"></script>
+
+        <script type="text/javascript">        
+        //override defaults
+        alertify.defaults.title="Shalooh";
+        alertify.defaults.transition = "zoom";
+        alertify.defaults.theme.ok = "ui positive button";
+        alertify.defaults.theme.cancel = "ui black button";
+        </script>
+
         <script src="{{ asset('js/app.js') }}" defer></script>
     </head>
     <body class="font-sans antialiased">
@@ -49,44 +66,7 @@
         <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js"></script>
         <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.print.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-        <script>
-            $(document).ready(function() {
-
-                var table = $('#report').DataTable( {
-                        dom: 'Bfrtip',
-                        scrollX: true,
-                        responsive: true,
-                        buttons: [
-                         'excel'
-                        ],
-                        
-
-                    } )
-                    .columns.adjust();
-
-                if( document.querySelector('#city') !== undefined && document.querySelector('#city') !== null ){
-                    $('#city').select2({
-                        selectionCssClass: ':all:',
-                    });
-
-                    
-                    document.querySelector('#shipping_country').addEventListener('change', e=>{
-                        let shipping_country = document.querySelector('#shipping_country option:checked').value;
-                        let _token = document.querySelector('input[name="_token"]').value;
-                        
-                        let data = new FormData();
-                        data.append('shipping_country', shipping_country);
-                        data.append('_token', _token);
-                        fetch('orders/get_cities', {
-                            method: 'POST',
-                            body: data
-
-                        }).then(res=>res.json()).then(result=>{
-                            document.querySelector('#city').innerHTML = result;
-                        }).catch(e=>console.log(e));
-                    });
-                }
-            } );
-        </script>
+        <script src="{{ asset('js/onreadyScripts.js') }}"></script>
+        
     </body>
 </html>

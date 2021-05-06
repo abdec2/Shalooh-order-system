@@ -23,6 +23,10 @@
                         {{ __('WMS') }}
                     </x-nav-link>
 
+                    <x-nav-link :href="route('wms.pick')" :active="request()->routeIs('wms.pick')">
+                        {{ __('Pick N Pack') }}
+                    </x-nav-link>
+
                     <x-nav-link :href="route('reports')" :active="request()->routeIs('reports')">
                         {{ __('Reports') }}
                     </x-nav-link>
@@ -83,6 +87,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('wms.list_products')" :active="request()->routeIs('wms.list_products')">
                 {{ __('WMS') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('wms.pick')" :active="request()->routeIs('wms.pick')">
+                {{ __('Pick N Pack') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('reports')" :active="request()->routeIs('reports')">
                 {{ __('Reports') }}

@@ -58,3 +58,19 @@ input:read-only {
 .select2-selection__rendered {
     line-height : 1.25rem !important;
 }
+
+#tblListProduct tbody tr:nth-child(odd), .tblOrders tbody tr:nth-child(odd){
+    background-color: #eee;
+}
+
+[type='checkbox']:checked {
+    color: rgba(245, 158, 11, 1);
+}
+
+.pickListImage {
+    width: 100px;
+}
+
+#frmPickProducts .tab {
+    display: none;
+}

@@ -88,10 +88,6 @@ const loadPackageDimension = (value)=>{
     }
 };
 
-
-
-
-
 function calculateVolWeight()
 {
     let length = document.querySelector('#package_length').value;
