@@ -40,7 +40,7 @@ class Shipment {
         else if( strtoupper($this->shipping_method) == strtoupper('TNT Express2 - 10 working days') ) {
             // incomplete
         }
-        else if( strtoupper($this->shipping_method) == strtoupper('Local Delivery (1 - 2 days)') )
+        else if( strtoupper($this->shipping_method) == strtoupper('Local Delivery (1 - 2 days)') || strtoupper($this->shipping_method) == strtoupper('Free Shipping'))
         {
             $this->result['tracking_number'] = $this->order['Order_ID'];
 
