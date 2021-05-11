@@ -85,7 +85,7 @@
                                                         <th class="w-1/12 p-2">Order #</th>
                                                         <th class="w-1/4 p-2">Order Date</th>
                                                         <th class="w-1/6 p-2">Shipping Carrier</th>
-                                                        <th class="w-1/6 p-2">Shipping Method</th>
+                                                        <th class="w-1/6 p-2">Payment Method</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -99,9 +99,9 @@
                                                         <td class="p-2 text-center ">
                                                             {{ $order->order_date }}</td>
                                                         <td class="p-2 text-center ">
-                                                            {{ $order->order_number }}</td>
+                                                            {{ $order->shipping_carrier }}</td>
                                                         <td class="p-2 text-center ">
-                                                            {{ $order->order_number }}</td>
+                                                            {{ $order->payment_method }}</td>
                                                     </tr>
                                                     @endforeach
                                                 </tbody>

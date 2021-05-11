@@ -40,6 +40,18 @@ Route::post('/ab-ajax/pickNpackInit', [AjaxController::class, 'pickNpackInit'])-
 
 Route::post('/ab-ajax/addPickList', [AjaxController::class, 'addPickList'])->middleware(['auth']);
 
+Route::post('/ab-ajax/getShipOrderDetails', [AjaxController::class, 'getShipOrderDetails'])->middleware(['auth']);
+
+Route::post('/ab-ajax/save_customer_detail', [AjaxController::class, 'save_customer_detail'])->middleware(['auth']);
+
+Route::post('/ab-ajax/save_shipping_detail', [AjaxController::class, 'save_shipping_detail'])->middleware(['auth']);
+
+Route::post('/ab-ajax/getCountries', [AjaxController::class, 'getCountries'])->middleware(['auth']);
+
+Route::post('/ab-ajax/getCitiesByCountry', [AjaxController::class, 'getCitiesByCountry'])->middleware(['auth']);
+
+Route::post('/ab-ajax/createLabelAndShipOrder', [AjaxController::class, 'createLabelAndShipOrder'])->middleware(['auth']);
+
 
 // Route::get('/wms/generate/bins', [BinController::class, 'generateBins'])->middleware(['auth'])->name('wms.generate.bins');
 

@@ -5,9 +5,10 @@ namespace App\Models\WMS;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ShippingCarriers extends Model
+class citiesModel extends Model
 {
     use HasFactory;
-    protected $table = 'shipping_carrier';
+    protected $table = 'wp_cities';
     protected $primaryKey = 'id';
+
 }

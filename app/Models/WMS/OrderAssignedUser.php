@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\WMS\Orders;
+use App\Models\WMS\pickList;
 
 
 class OrderAssignedUser extends Model
@@ -20,11 +21,16 @@ class OrderAssignedUser extends Model
 
 
     function User(){
-        return $this->hasOne(User::class, 'id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     function order()
     {
-        return $this->hasOne(Orders::class, 'id');
+        return $this->belongsTo(Orders::class, 'order_id');
+    }
+
+    function pickList()
+    {
+        return $this->hasMany(pickList::class, 'order_ass_user_id');
     }
 }

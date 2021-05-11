@@ -8,7 +8,8 @@ use App\Models\WMS\Orders;
 use App\Models\WMS\OrderStatus;
 use App\Models\WMS\OrderAssignedUser;
 use App\Models\WMS\pickList;
-
+use App\Models\WMS\countriesModel;
+use App\Models\WMS\citiesModel;
 
 use Illuminate\Support\Carbon;
 use App\Exceptions\OrderAlreadyAssigned;
@@ -243,6 +244,8 @@ class AjaxController extends Controller
             foreach($item as $key => $value)
             {
                 $item[$key]['status'] = $request->status;
+                $item[$key]['created_at'] = Carbon::now()->toDateTimeString();
+                $item[$key]['updated_at'] = Carbon::now()->toDateTimeString();
                 OrderAssignedUser::where('id',$value['order_ass_user_id'])->update(['status' => 'picked']);
             }
 
@@ -261,5 +264,225 @@ class AjaxController extends Controller
 
     } // function ends here
 
+    // function to get Order details for the ship orders popup
+    function getShipOrderDetails(Request $request)
+    {
+        try
+        {
+            $orderDetail = Orders::select('orders.*', 'products.*', 'bins.*', 'shipping_carrier.*','pick_list.*')
+                            ->join('shipping_carrier','shipping_carrier.id','=','orders.shipping_carrier_id')
+                            ->join('order_assigned_users', 'order_assigned_users.order_id', '=', 'orders.id')
+                            ->join('pick_list', 'pick_list.order_ass_user_id','=','order_assigned_users.id')
+                            ->join('products','products.id','=','pick_list.product_id')
+                            ->join('bins','bins.id','=','pick_list.bin_id')
+                            ->where('orders.id', $request->orderID)
+                            ->get();
+
+            if(count($orderDetail) == 0)
+            {
+                throw new \Exception('No details found');
+            }
+
+
+            return response()->json($orderDetail);
+
+        }
+        catch(\Exception $e){
+            $error['type']='error';
+            $error['msg'] = $e->getMessage();
+            return response()->json($error);
+        }
+    } // function ends here
+
+    // function to save customer details by order id
+
+    function save_customer_detail(Request $request)
+    {
+        try{
+            $updateOrder = Orders::find($request->orderID);
+            if(!$updateOrder)
+            {
+                throw new \Exception('Order not found.');
+            }
+
+            $validated = $request->validate([
+                'customerName' => 'required|max:255',
+                'customerContact' => 'required|max:50',
+                'shipping_address1' => 'required|max:1000',
+                'shipping_address2' => 'max:1000',
+                'state' => 'max:255',
+                'postal' => 'max:255',
+                'city' => 'required|max:255',
+                'country' => 'required|max:255'
+            ]);
+
+
+            $updateOrder->customer_name = $validated['customerName'];
+            $updateOrder->customer_contact = $validated['customerContact'];
+            $updateOrder->shipping_address1 = $validated['shipping_address1'];
+            $updateOrder->shipping_address2 = $validated['shipping_address2'];
+            $updateOrder->state = $validated['state'];
+            $updateOrder->postal = $validated['postal'];
+            $updateOrder->city = $validated['city'];
+            $updateOrder->country = $validated['country'];
+            $updateOrder->save();
+
+            $validated['type']='success';
+            return response()->json($validated);
+
+        } catch(\Exception $e)
+        {
+            $error['type']='error';
+            $error['msg'] = $e->getMessage();
+            return response()->json($error);
+        }
+    } // function ends here
+
+    // function to save shipping details of an order by using orderid
+    function save_shipping_detail(Request $request)
+    {
+        try
+        {
+            $updateOrder = Orders::find($request->orderID);
+            if(!$updateOrder)
+            {
+                throw new \Exception('Order not found.');
+            }
+
+            $validated = $request->validate([
+                'totalVolWeight' => 'required|numeric',
+                'shipping_package_size' => 'required',
+                'package_length' => 'required|numeric',
+                'package_width' => 'required|numeric',
+                'package_height' => 'required|numeric'
+            ]);
+
+
+            $updateOrder->total_vol_weight = $validated['totalVolWeight'];
+            $updateOrder->package_size = $validated['shipping_package_size'];
+            $updateOrder->package_length = $validated['package_length'];
+            $updateOrder->package_width = $validated['package_width'];
+            $updateOrder->package_height = $validated['package_height'];
+            $updateOrder->save();
+
+            $validated['type']='success';
+            return response()->json($validated);
+        }
+        catch(\Exception $e)
+        {
+            $error['type']='error';
+            $error['msg'] = $e->getMessage();
+            return response()->json($error);
+        }
+    } // function ends here
+
+    //function to get countries from database
+
+    function getCountries(Request $request)
+    {
+        try
+        {
+            $countries = countriesModel::all();
+
+            return response()->json($countries);
+        }
+        catch(\Exception $e)
+        {
+            $error['type']='error';
+            $error['msg'] = $e->getMessage();
+            return response()->json($error);
+        }
+    } // function ends here
+
+     //function to get cities by country code from db
+     function getCitiesByCountry(Request $request)
+     {
+         try
+         {
+             $cities = citiesModel::select('wp_cities.*')
+                        ->join('wp_countries', 'wp_countries.id', '=', 'wp_cities.country_id')
+                        ->where('wp_countries.country_code', $request->country)
+                        ->get();
+ 
+             return response()->json($cities);
+         }
+         catch(\Exception $e)
+         {
+             $error['type']='error';
+             $error['msg'] = $e->getMessage();
+             return response()->json($error);
+         }
+     } // function ends here
+
+     // function to create label and ship order
+     function createLabelAndShipOrder(Request $request)
+     {
+        try
+        {
+            
+            $order = Orders::where('id', $request->orderID)->with('shipping_carrier')->get();
+            $orderData = unserialize($order[0]->order_data);
+
+            $orderArray = [];
+            $orderArray['Order_ID'] = $order[0]->order_number;
+            $orderArray['shipping_method'] = $order[0]->shipping_carrier->shipping_carrier;
+            $orderArray['customer_name'] = $order[0]->customer_name;
+            $orderArray['shipping_address1'] = $order[0]->shipping_address1;
+            $orderArray['shipping_address2'] = $order[0]->shipping_address2;
+            $orderArray['city'] = $order[0]->city;
+            $orderArray['state'] = ($order[0]->state !== null) ? $order[0]->state : '';
+            $orderArray['postcode'] = ($order[0]->postal !== null) ? $order[0]->postal : '';
+            $orderArray['country'] = $order[0]->country;
+            $orderArray['phone'] = $order[0]->customer_contact;
+            $orderArray['payment_method'] = $order[0]->payment_method;
+            $orderArray['order_amount'] = $orderData['total'];
+            $orderArray['email'] = $orderData['billing']['email'];
+            $orderArray['orderweight'] = $order[0]->total_weight;
+            $orderArray['orderVolweight'] = $order[0]->total_vol_weight;
+            $orderArray['package_length'] = $order[0]->package_length;
+            $orderArray['package_width'] = $order[0]->package_width;
+            $orderArray['package_height'] = $order[0]->package_height;
+            $orderArray['orderData'] = $orderData;
+
+            if(strtoupper($orderDetails[0]->shipping_method) !== strtoupper('TNT Express'))
+            {
+                $shipment = new Shipment($orderDetails[0]->shipping_method, $orderArray);
+                $result = $shipment->addShip();
+
+                // print_r($result);
+
+                $orderUpdate = OrderDetails::find($orderDetails[0]->id);
+                $orderUpdate->OrderDetails1()->update([
+                    'tracking_no' => $result['tracking_number'],
+                    'updated_by' => $request->user()->id
+                ]);
+                
+                WoocommerceClass::update_shipment_tracking_number($orderDetails[0]->shipping_method, $result['tracking_number'], $orderDetails[0]->order_number);
+
+                if(isset($result['COMM_INV']))
+                {   
+                    $zipper = new \Madnest\Madzipper\Madzipper;
+                    $zipper->make('test.zip')->addString($orderArray['Order_ID'].'_AWB_'.date('Y-m-d H:i:s').'.pdf', $result['file'])->addString($orderArray['Order_ID'].'_COMM_INV_'.date('Y-m-d H:i:s').'.pdf', $result['COMM_INV'])->close();
+
+                    $zipfile = file_get_contents('test.zip');
+
+                    unlink('test.zip');
+
+                    return response()->sendZip($zipfile);                        
+
+                } else {
+                    return response()->attachment($result['file']);
+                }
+                
+            }
+        }
+        catch(\Exception $e)
+         {
+             $error['type']='error';
+             $error['msg'] = $e->getMessage();
+             return response()->json($error);
+         }
+     } // function ends here
+ 
 
 } // class ends here

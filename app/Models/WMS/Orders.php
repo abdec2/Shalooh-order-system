@@ -5,6 +5,10 @@ namespace App\Models\WMS;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\WMS\OrderAssignedUser;
+use App\Models\WMS\ShippingCarriers;
+
+
 class Orders extends Model
 {
     use HasFactory;
@@ -16,5 +20,15 @@ class Orders extends Model
     function OrderStatus()
     {
         return $this->belongsTo(OrderStatus::class, 'order_status_id');
+    }
+
+    function order_assigned_user()
+    {
+        return $this->hasOne(OrderAssignedUser::class, 'order_id');
+    }
+
+    function shipping_carrier()
+    {
+        return $this->belongsTo(ShippingCarriers::class);
     }
 }

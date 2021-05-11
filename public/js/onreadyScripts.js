@@ -433,22 +433,70 @@ const validate = (dbValue, ele) => {
     
 };
 
-const shipOrder = orderID=>{
+const shipOrder = async orderID=>{
+    let form = new FormData();
+    let token = document.querySelector('meta[name=csrf-token]').getAttribute('content');
+    form.append('_token', token);
+    form.append('orderID', orderID);
+
+    let response = await fetch('/ab-ajax/getShipOrderDetails', {method: 'POST', body: form});
+
+    let result = await response.json();
+
+    if(result.type == 'error')
+    {
+        alertify.alert(result.msg);
+        return;
+    }
+    //${orderID}, '${result[0].order_number}', '${result[0].customer_name}', '${result[0].customer_contact}', '${result[0].shipping_address1}
+    
     let html = `
         <div id="ShipOrderPopup">
-            <div class="header"><h1 class="text-center text-2xl uppercase font-bold text-yellow-500">Ship Order</h1></div>
+            <div class="header mb-8"><h1 class="text-center text-2xl uppercase font-bold text-yellow-500">Ship Order</h1></div>
             <div class="flex flex-col">
-                <div class="relative mt-8 border-yellow-500 p-4 border-2 w-full" >
-                    <p class="text-sm"><strong>Order Number:</strong> 18150</p>
-                    <p class="text-sm"><strong>Customer Name:</strong> Azim Baig</p>
-                    <p class="text-sm"><strong>Customer Contact:</strong> +973 36387778</p>
-                    <p class="text-sm"><strong>Customer Address:</strong> Flat No 1, Building 2201, Road 1144, Block 711, Tubli, Manama, Bahrain</p>
+                <div class="flex flex-row item-center justify-between">
+                    <h1 class="font-bold text-lg">Customer Details:</h1>
+                    <a id="btnCustDetEdit" class="leading-7 text-blue-300 cursor-pointer">edit</a>
                 </div>
-                <div class="relative mt-8 border-yellow-500 p-4 border-2 w-full" >
-                    <p class="text-sm"><strong>Payment Method:</strong> Cash On Delivery</p>
+                <div id="divCustomerDetails" class="relative mb-5 border-yellow-500 p-4 border-2 w-full rounded" >
+                    <p class="text-sm"><strong>Order Number:</strong> ${result[0].order_number}</p>
+                    <p class="text-sm"><strong>Customer Name:</strong> ${result[0].customer_name}</p>
+                    <p class="text-sm"><strong>Customer Contact:</strong> ${result[0].customer_contact}</p>
+                    <p class="text-sm"><strong>Shipping Address 1:</strong> ${result[0].shipping_address1}</p>
+                    <p class="text-sm"><strong>Shipping Address 2:</strong> ${(result[0].shipping_address2 !== null) ? result[0].shipping_address2 : ''}</p>
+                    <p class="text-sm"><strong>State / Province:</strong> ${(result[0].state !== null) ? result[0].state : ''}</p>
+                    <p class="text-sm"><strong>Postal/Zip</strong> ${(result[0].postal !== null) ? result[0].postal : ''}</p>
+                    <p class="text-sm"><strong>City:</strong> ${result[0].city}</p>
+                    <p class="text-sm"><strong>Country:</strong> ${result[0].country}</p>
                 </div>
-                <div class="relative mt-8 border-yellow-500 p-4 border-2 w-full" >
-                    <p class="text-sm"><strong>Tracking Number:</strong> 1712424</p>
+
+                <div><h1 class="font-bold text-lg">Payment Details: </h1></div>
+                <div class="relative mb-5 border-yellow-500 p-4 border-2 w-full rounded" >
+                    <p class="text-sm"><strong>Payment Method:</strong> ${result[0].payment_method}</p>
+                </div>
+                <div class="flex flex-row item-center justify-between">
+                    <h1 class="font-bold text-lg">Shipment Details: </h1>
+                    <a onclick="editShipmentDetail(${orderID}, '${result[0].shipping_carrier}', '${result[0].tracking_no}', '${result[0].total_weight}', '${result[0].total_vol_weight}', '${result[0].package_length}', '${result[0].package_width}', '${result[0].package_height}')" class="leading-7 text-blue-300 cursor-pointer">edit</a>
+                </div>
+                <div id="divShippingDetails" class="relative mb-5 border-yellow-500 p-4 border-2 w-full rounded" >
+                    <p class="text-sm"><strong>Shipping Carrier:</strong> ${result[0].shipping_carrier}</p>
+                    <p class="text-sm"><strong>Tracking Number:</strong> ${result[0].tracking_no}</p>
+                    <p class="text-sm"><strong>Total Weight:</strong> ${result[0].total_weight}KG</p>
+                    <p class="text-sm"><strong>Total Volumetric Weight:</strong> ${result[0].total_vol_weight}Kg</p>
+                    <p class="text-sm"><strong>Package Dimensions:</strong> L: ${result[0].package_length}cm X W: ${result[0].package_width}cm X H: ${result[0].package_height}cm</p>
+                </div>
+          
+                <div><h1 class="font-bold text-lg">Ordered Products: </h1></div>
+                <div class="relative mb-5 border-yellow-500 p-4 border-2 w-full overflow-x-auto rounded" >
+                    <table class="table-auto w-full">
+                    <tbody>
+                        ${result.map(getproductHTMLForShipOrderPOPup).join('')}
+                    </tbody>
+                    </table>
+                </div>
+                <div class="relative w-full flex flex-col md:flex-row justify-around" >
+                    <button class="text-white mb-3 bg-yellow-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-md ">Get Invoice</button>
+                    <button onclick="create_label(${orderID})" class="text-white mb-3 bg-yellow-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-md">Create Label</button>
                 </div>
             </div>
         </div>
@@ -460,11 +508,285 @@ const shipOrder = orderID=>{
         resizable:false,
         padding:true, 
         closableByDimmer: false,
-        onshow: getShipOrderDetail(orderID),
     };
     let shipDialog = makeDialog(html, options);
+
+    document.querySelector('#btnCustDetEdit').addEventListener('click', e=>{
+        editConstumerDetail(result, orderID);
+    });
 };
 
-const getShipOrderDetail = OrderID => {
-    console.log(OrderID);
+
+const getproductHTMLForShipOrderPOPup = (item, index) =>
+{
+    return `
+        <tr>
+            <td class="w-1/4 text-center"><img src="${item.image_path}" alt="" /></td>
+            <td class="w-2/4 text-center"><strong>SKU:</strong> ${item.sku}</td>
+            <td class="w-1/4 text-center"><strong>Qty:</strong> ${item.qty_picked}</td>
+        </tr>
+    `;
+}
+//orderID, orderNumber, Name, Contact, Address
+const editConstumerDetail = async (obj, orderID) => {
+   
+    let resultCountry = await getCountries();
+
+    let resultCity = await getCitiesByCountry(obj[0].country);
+
+    let html = `
+    <form id="frmCustDetail" onsubmit="return false;">
+        <p class="text-sm"><strong>Order Number:</strong> ${obj[0].order_number}</p>
+        <p class="text-sm"><strong>Customer Name:</strong> <input class="w-full border-gray-300 rounded focus:outline-none border" name="customerName" id="customerName" value="${obj[0].customer_name}" /></p>
+        <p class="text-sm"><strong>Customer Contact:</strong> <input class="w-full border-gray-300 rounded focus:outline-none border" name="customerContact" id="customerContact" value="${obj[0].customer_contact}" /></p>
+        <p class="text-sm"><strong>Shipping Address 1:</strong> <input class="w-full border-gray-300 rounded focus:outline-none border" name="shipping_address1" id="shipping_address1" value="${obj[0].shipping_address1}" /></p>
+        <p class="text-sm"><strong>Shipping Address 2:</strong> <input class="w-full border-gray-300 rounded focus:outline-none border" name="shipping_address2" id="shipping_address2" value="${(obj[0].shipping_address2 !== null) ? obj[0].shipping_address2 : ''}" /></p>
+
+        <p class="text-sm"><strong>State / Province:</strong> <input class="w-full border-gray-300 rounded focus:outline-none border" name="state" id="state" value="${(obj[0].state !== null) ? obj[0].state : ''}" /></p>
+
+        <p class="text-sm"><strong>Postal / Zip:</strong> <input class="w-full border-gray-300 rounded focus:outline-none border" name="postal" id="postal" value="${(obj[0].postal !== null) ? obj[0].postal : ''}" /></p>
+
+        <p class="text-sm"><strong>City:</strong> 
+
+            <select id="city" name="city"
+                class="w-full border-gray-300 rounded focus:outline-none border focus:ring-transparent focus:border-gray-300"
+                required>
+                <option value="" >Select</option>
+                ${resultCity.map(item=>{
+                    return `<option value="${item.cities}" ${(obj[0].city == item.cities) ? 'selected' : ''}>${item.cities} </option>`
+                }).join('')}
+            </select>
+        
+        </p>
+
+        <p class="text-sm"><strong>Country:</strong> 
+
+            <select id="country" name="country"
+                class="w-full border-gray-300 rounded focus:outline-none border focus:ring-transparent focus:border-gray-300"
+                required>
+                <option value="" >Select</option>
+               ${resultCountry.map(item=>{
+                   return `<option value="${item.country_code}" ${(obj[0].country == item.country_code) ? 'selected' : ''}>${item.country} </option>`
+               }).join('')}
+            </select>
+        
+        </p>
+
+        <button id="btnCustDetSave" class="mt-4 text-white bg-yellow-500 px-4 focus:outline-none hover:bg-yellow-600 rounded text-md" >Save</button>
+        <button id="btnCustDetCancel" class="mt-4 text-white bg-gray-500 px-4 focus:outline-none hover:bg-gray-600 rounded text-md" >Cancel</button>
+    </form>
+    `;
+
+    document.querySelector('#divCustomerDetails').innerHTML = html;
+
+    document.querySelector('#country').addEventListener('change', async e=>{
+        let cities = await getCitiesByCountry(e.target.value);
+        let html = cities.map(item=>{
+            return `
+            <option value="${item.cities}">${item.cities} </option>
+            `;
+        }).join('');
+        document.querySelector('#city').innerHTML = html;
+    });
+
+    document.querySelector('#btnCustDetCancel').addEventListener('click', e=>{
+        let html = `
+            <p class="text-sm"><strong>Order Number:</strong> ${obj[0].order_number}</p>
+            <p class="text-sm"><strong>Customer Name:</strong> ${obj[0].customer_name}</p>
+            <p class="text-sm"><strong>Customer Contact:</strong> ${obj[0].customer_contact}</p>
+            <p class="text-sm"><strong>Shipping Address 1:</strong> ${obj[0].shipping_address1}</p>
+            <p class="text-sm"><strong>Shipping Address 2:</strong> ${(obj[0].shipping_address2 !== null) ? obj[0].shipping_address2 : ''}</p>
+            <p class="text-sm"><strong>State / Province:</strong> ${(obj[0].state !== null) ? obj[0].state : ''}</p>
+            <p class="text-sm"><strong>Postal/Zip: </strong> ${(obj[0].postal !== null) ? obj[0].postal : ''}</p>
+            <p class="text-sm"><strong>City:</strong> ${obj[0].city}</p>
+            <p class="text-sm"><strong>Country:</strong> ${obj[0].country}</p>
+        `;
+
+        document.querySelector('#divCustomerDetails').innerHTML = html;
+    });
+
+    document.querySelector('#btnCustDetSave').addEventListener('click', e=>{
+        let form = new FormData(document.querySelector('#frmCustDetail'));
+        let token = document.querySelector('meta[name=csrf-token]').getAttribute('content');
+        form.append('_token', token);
+        form.append('orderID', orderID);
+
+        fetch('/ab-ajax/save_customer_detail',{
+            method: 'POST',
+            body: form
+        })
+        .then(res=>res.json())
+        .then(result=>{
+            if(result.type !== 'error')
+            {
+                let html = `
+                    <p class="text-sm"><strong>Order Number:</strong> ${obj[0].order_number}</p>
+                    <p class="text-sm"><strong>Customer Name:</strong> ${result.customerName}</p>
+                    <p class="text-sm"><strong>Customer Contact:</strong> ${result.customerContact}</p>
+                    <p class="text-sm"><strong>Shipping Address 1:</strong> ${result.shipping_address1}</p>
+                    <p class="text-sm"><strong>Shipping Address 2:</strong> ${(result.shipping_address2 !== null) ? result.shipping_address2 : ''}</p>
+                    <p class="text-sm"><strong>State / Province:</strong> ${(result.state !== null) ? result.state : ''}</p>
+                    <p class="text-sm"><strong>Postal/Zip: </strong> ${(result.postal !== null) ? result.postal : ''}</p>
+                    <p class="text-sm"><strong>City:</strong> ${result.city}</p>
+                    <p class="text-sm"><strong>Country:</strong> ${result.country}</p>
+                `;
+
+                document.querySelector('#divCustomerDetails').innerHTML = html;
+            }   
+            else {
+                alertify.alert(result.msg);
+            }
+        })
+        .catch(e=>console.log(e));
+       
+    });
+};
+
+const editShipmentDetail = (orderID, shipping_carrier, tracking_no, total_weight, total_vol_weight, package_length, package_width, package_height) => {
+    let html = `
+    <form id="frmShipDetail" onsubmit="return false;">
+        <p class="text-sm"><strong>Shipping Carrier:</strong> ${shipping_carrier}</p>
+        <p class="text-sm"><strong>Tracking Number:</strong> ${tracking_no}</p>
+        <p class="text-sm"><strong>Total Weight:</strong> ${total_weight}KG</p>
+        <p class="text-sm"><strong>Total Volumetric Weight:</strong> <input type="text" name="totalVolWeight" id="totalVolWeight"
+        class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+        value="${total_vol_weight}Kg"
+        readonly> </p>
+        <p class="text-sm"><strong>Package Dimensions:</strong>
+            <select id="shipping_package_size" name="shipping_package_size"
+            class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-yellow-600 focus:border-yellow-600 sm:text-sm"
+            onchange="loadPackageDimension(this.value)" required>
+                <option value="">Select</option>
+                <option value="12X25X16">L:12cm W:25cm H:16cm (1Kg)</option>
+                <option value="30X22X15">L:30cm W:22cm H:15cm (2Kg)</option>
+                <option value="30X44X18.5">L:30cm W:44cm H:18.5cm (5Kg)</option>
+                <option value="other">Other</option>
+            </select>
+        </p>
+
+        <div class="flex mt-4">
+            <div class="relative">
+                <label for="length" class="block text-sm text-center font-medium text-gray-700">L*</label>
+                <input type="text" name="package_length" id="package_length"
+                    class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    required>
+            </div>
+            <div class="relative mx-3">
+                <label for="width" class="block text-sm text-center font-medium text-gray-700">W*</label>
+                <input type="text" name="package_width" id="package_width"
+                    class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    required>
+            </div>
+            <div class="relative">
+                <label for="height" class="block text-sm text-center font-medium text-gray-700">H*</label>
+                <input type="text" name="package_height" id="package_height"
+                    class="mt-1 focus:ring-yellow-600 focus:border-yellow-600 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    required>
+            </div>
+        </div>
+        <button id="btnShipDetSave" class="mt-4 text-white bg-yellow-500 px-4 focus:outline-none hover:bg-yellow-600 rounded text-md" >Save</button>
+        <button id="btnShipDetCancel" class="mt-4 text-white bg-gray-500 px-4 focus:outline-none hover:bg-gray-600 rounded text-md" >Cancel</button>
+    </form>
+    `;
+
+    document.querySelector('#divShippingDetails').innerHTML = html;
+
+    document.querySelector('#btnShipDetCancel').addEventListener('click', e=>{
+        let html = `
+            <p class="text-sm"><strong>Shipping Carrier:</strong> ${shipping_carrier}</p>
+            <p class="text-sm"><strong>Tracking Number:</strong> ${tracking_no}</p>
+            <p class="text-sm"><strong>Total Weight:</strong> ${total_weight}KG</p>
+            <p class="text-sm"><strong>Total Volumetric Weight:</strong> ${total_vol_weight}Kg</p>
+            <p class="text-sm"><strong>Package Dimensions:</strong> L: ${package_length}cm X W: ${package_width}cm X H: ${package_height}cm</p>
+        `;
+
+        document.querySelector('#divShippingDetails').innerHTML = html;
+    });
+
+    document.querySelector('#package_length').addEventListener('focusout', calculateVolWeight);
+    document.querySelector('#package_width').addEventListener('focusout', calculateVolWeight);
+    document.querySelector('#package_height').addEventListener('focusout', calculateVolWeight);
+
+    document.querySelector('#btnShipDetSave').addEventListener('click', e=>{
+        let form = new FormData(document.querySelector('#frmShipDetail'));
+        let token = document.querySelector('meta[name=csrf-token]').getAttribute('content');
+        form.append('_token', token);
+        form.append('orderID', orderID);
+
+        fetch('/ab-ajax/save_shipping_detail',{
+            method: 'POST',
+            body: form
+        })
+        .then(res=>res.json())
+        .then(result=>{
+            if(result.type !== 'error')
+            {
+                console.log(result);
+                let html = `
+                    <p class="text-sm"><strong>Shipping Carrier:</strong> ${shipping_carrier}</p>
+                    <p class="text-sm"><strong>Tracking Number:</strong> ${tracking_no}</p>
+                    <p class="text-sm"><strong>Total Weight:</strong> ${total_weight}KG</p>
+                    <p class="text-sm"><strong>Total Volumetric Weight:</strong> ${result.totalVolWeight}Kg</p>
+                    <p class="text-sm"><strong>Package Dimensions:</strong> L: ${result.package_length}cm X W: ${result.package_width}cm X H: ${result.package_height}cm</p>
+                `;
+
+                document.querySelector('#divShippingDetails').innerHTML = html;
+            }   
+            else {
+                alertify.alert(result.msg);
+            }
+        })
+        .catch(e=>console.log(e));
+    });
+};
+
+
+const getCountries = async () => {
+    let form = new FormData();
+    form.append('_token', document.querySelector('meta[name=csrf-token]').getAttribute('content'));
+    let resCountry  = await fetch('/ab-ajax/getCountries', {method: 'POST', body: form});
+    let resultCountry = await resCountry.json();
+
+    return resultCountry;
+};
+
+
+const getCitiesByCountry = async (country) => {
+    let form = new FormData();
+    form.append('_token', document.querySelector('meta[name=csrf-token]').getAttribute('content'));
+    form.append('country', country);
+
+    let resCity = await fetch('/ab-ajax/getCitiesByCountry', {method: 'POST', body: form});
+    let resultCity = await resCity.json();
+
+    return resultCity;
+};
+
+const create_label = (orderID) => {
+    let form = new FormData();
+    form.append('_token', document.querySelector('meta[name=csrf-token]').getAttribute('content'));
+    form.append('orderID', orderID);
+
+    fetch('/ab-ajax/createLabelAndShipOrder', {
+        method: 'POST', 
+        body: form
+    })
+    .then(res=>res.json()).then(result=>console.log(result));
+    // .then(res=>res.blob()).then(blob=>{
+    //     const url = window.URL.createObjectURL(blob);
+    //     const a = document.createElement('a');
+    //     a.style.display = 'none';
+    //     a.href = url;
+    //     if(blob.type == "application/zip"){
+    //         a.download = document.querySelector('#orderID').value+'_'+getCurrentDate()+'.zip';
+    //     } else {
+    //         a.download = document.querySelector('#orderID').value+'_'+getCurrentDate()+'.pdf';
+    //     }
+    //     document.body.appendChild(a);
+    //     a.click();
+    //     window.URL.revokeObjectURL(url);
+        
+    // }).catch(() => alert('oh no!'));
+
+    
 };

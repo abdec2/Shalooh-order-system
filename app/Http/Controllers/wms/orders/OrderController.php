@@ -13,14 +13,18 @@ class OrderController extends Controller
 {
     function listPendingOrders(Request $request)
     {
-        $orders = DB::table('orders')->select('orders.*')->join('order_status', 'orders.order_status_id','=','order_status.id')->where(strtoupper('order_status.status'), '=', strtoupper('Pending'))->paginate(10);
+        $orders = DB::table('orders')->select('orders.*', 'shipping_carrier.shipping_carrier')->join('order_status', 'orders.order_status_id','=','order_status.id')->where(strtoupper('order_status.status'), '=', strtoupper('Pending'))
+        ->join('shipping_carrier', 'shipping_carrier.id','=','orders.shipping_carrier_id')
+        ->paginate(10);
         // dd($orders);
         return view('wms/pendingOrders', compact('orders'));
     } // function ends here
 
     function listProcessingOrders(Request $request)
     {
-        $orders = DB::table('orders')->select('orders.*')->join('order_status', 'orders.order_status_id','=','order_status.id')->where(strtoupper('order_status.status'), '=', strtoupper('Processing'))->paginate(10);
+        $orders = DB::table('orders')->select('orders.*','shipping_carrier.shipping_carrier')->join('order_status', 'orders.order_status_id','=','order_status.id')->where(strtoupper('order_status.status'), '=', strtoupper('Processing'))
+        ->join('shipping_carrier', 'shipping_carrier.id','=','orders.shipping_carrier_id')
+        ->paginate(10);
 
         $users = User::all();
 

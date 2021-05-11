@@ -57,7 +57,8 @@
                                                         </div>
                                                         
                                                         <div class="flex-grow">
-                                                            <p class="leading-relaxed text-base break-words"><strong class="text-yellow-500">Shipping Address:</strong> {{ $item->order->shipping_address }}</p>
+                                                            <p class="leading-relaxed text-base break-words"><strong class="text-yellow-500">Customer Name:</strong> {{ $item->order->customer_name }}</p>
+                                                            <p class="leading-relaxed text-base break-words"><strong class="text-yellow-500">Customer Contact:</strong> {{ $item->order->customer_contact }}</p>
                                                             <p class="leading-relaxed text-base break-words"><strong class="text-yellow-500">Tray:</strong> {{ ($item->pick_tray == null) ? 'none' : $item->pick_tray }}</p>
                                                         </div>
                                                         <button class="mt-16 text-white bg-yellow-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-lg" onClick="assignTray({{ $item->id }})">Assign Tray</button>

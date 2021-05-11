@@ -115,11 +115,11 @@
                                                         <td class="p-2 text-center ">
                                                             {{ $order->order_date }}</td>
                                                         <td class="p-2 text-center ">
-                                                            {{ $order->order_number }}</td>
+                                                            {{ $order->shipping_carrier }}</td>
                                                         <td class="p-2 text-center ">
-                                                            {{ $order->order_number }}</td>
+                                                            {{ $order->payment_method }}</td>
                                                         <td class="p-2 text-center ">
-                                                            <button class="w-full text-white bg-blue-500 rounded ring-transparent border-transparent" onclick="shipOrder({{ $order->id }})">Ship</button>
+                                                            <button class="w-full text-white bg-blue-500 hover:bg-blue-600 focus:outline-none rounded" onclick="shipOrder({{ $order->id }})">Ship</button>
                                                         </td>
                                                     </tr>
                                                     @endforeach
