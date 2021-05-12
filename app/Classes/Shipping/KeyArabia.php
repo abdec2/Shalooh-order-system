@@ -20,7 +20,7 @@ class KeyArabia {
         $this->order_id = $order['Order_ID'];
         $this->payment_type = $order['payment_method'];
         $this->order_amount = $order['order_amount'];
-        $this->customer_name = $order['first_name'].' '.$order['last_name'];
+        $this->customer_name = $order['customer_name'];
         $this->customer_phone = $order['phone'];
         $this->address = $order['shipping_address1'].' '.$order['shipping_address2'];
         $this->email = $order['email'];

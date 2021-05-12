@@ -20,13 +20,13 @@ class Shipment {
 
     public function addShip()
     {
-        if( strtoupper($this->shipping_method) == strtoupper('Standard (1-2 working days)') || strtoupper($this->shipping_method) == strtoupper('SMSA Express (4-10 working days)') ) {
+        if( strtoupper($this->shipping_method) == strtoupper('SMSA Express')) {
             $SMSA = new SMSA;
             $response = $SMSA->Generate_SMSA_Waybill_Number_With_File($this->order);
             $this->result['file'] = base64_decode($response['AwbFile']);
             $this->result['tracking_number'] = $response['AwbNumber'];
         }
-        else if( strtoupper($this->shipping_method) == strtoupper('FedEx International Priority') ) {
+        else if( strtoupper($this->shipping_method) == strtoupper('FedEx') ) {
             $FedEx = new FedEX($this->order);
             $label = $FedEx->createShipment();
             $this->result['file'] = $label['file'];
@@ -37,10 +37,10 @@ class Shipment {
             }
 
         }
-        else if( strtoupper($this->shipping_method) == strtoupper('TNT Express2 - 10 working days') ) {
+        else if( strtoupper($this->shipping_method) == strtoupper('TNT Express') ) {
             // incomplete
         }
-        else if( strtoupper($this->shipping_method) == strtoupper('Local Delivery (1 - 2 days)') )
+        else if( strtoupper($this->shipping_method) == strtoupper('Shalooh Delivery') )
         {
             $this->result['tracking_number'] = $this->order['Order_ID'];
 

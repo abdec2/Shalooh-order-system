@@ -10,6 +10,10 @@ use App\Models\WMS\OrderAssignedUser;
 use App\Models\WMS\pickList;
 use App\Models\WMS\countriesModel;
 use App\Models\WMS\citiesModel;
+use App\Models\WMS\Inventory;
+
+use App\Classes\Shipping\Shipment;
+use App\Classes\livesite\WoocommerceClass;
 
 use Illuminate\Support\Carbon;
 use App\Exceptions\OrderAlreadyAssigned;
@@ -247,6 +251,10 @@ class AjaxController extends Controller
                 $item[$key]['created_at'] = Carbon::now()->toDateTimeString();
                 $item[$key]['updated_at'] = Carbon::now()->toDateTimeString();
                 OrderAssignedUser::where('id',$value['order_ass_user_id'])->update(['status' => 'picked']);
+                $inventory = Inventory::where('bin_id', $value['bin_id'])->get();
+                $inventoryUpdate = Inventory::find($inventory[0]->id);
+                $inventoryUpdate->quantity = (int)$inventoryUpdate->quantity - (int)$value['qty_picked'];
+                $inventoryUpdate->save();
             }
 
             pickList::insert($item);
@@ -283,6 +291,8 @@ class AjaxController extends Controller
                 throw new \Exception('No details found');
             }
 
+            $orderData = unserialize($orderDetail[0]->order_data);
+            $orderDetail[0]['orderData1'] = $orderData;
 
             return response()->json($orderDetail);
 
@@ -444,20 +454,19 @@ class AjaxController extends Controller
             $orderArray['package_height'] = $order[0]->package_height;
             $orderArray['orderData'] = $orderData;
 
-            if(strtoupper($orderDetails[0]->shipping_method) !== strtoupper('TNT Express'))
+            if(strtoupper($order[0]->shipping_carrier->shipping_carrier) !== strtoupper('TNT Express'))
             {
-                $shipment = new Shipment($orderDetails[0]->shipping_method, $orderArray);
+                $shipment = new Shipment($order[0]->shipping_carrier->shipping_carrier, $orderArray);
                 $result = $shipment->addShip();
 
                 // print_r($result);
+                $OrderStatus = OrderStatus::where( strtoupper('status'), strtoupper('Shipped') )->get();
+                $orderUpdate = Orders::find($request->orderID);
+                $orderUpdate->tracking_no = $result['tracking_number'];
+                $orderUpdate->order_status_id = $OrderStatus[0]->id;
+                $orderUpdate->save();
 
-                $orderUpdate = OrderDetails::find($orderDetails[0]->id);
-                $orderUpdate->OrderDetails1()->update([
-                    'tracking_no' => $result['tracking_number'],
-                    'updated_by' => $request->user()->id
-                ]);
-                
-                WoocommerceClass::update_shipment_tracking_number($orderDetails[0]->shipping_method, $result['tracking_number'], $orderDetails[0]->order_number);
+                // WoocommerceClass::update_shipment_tracking_number($order[0]->shipping_carrier->shipping_carrier, $result['tracking_number'], $order[0]->order_number);
 
                 if(isset($result['COMM_INV']))
                 {   
@@ -473,15 +482,14 @@ class AjaxController extends Controller
                 } else {
                     return response()->attachment($result['file']);
                 }
-                
             }
         }
         catch(\Exception $e)
-         {
-             $error['type']='error';
-             $error['msg'] = $e->getMessage();
-             return response()->json($error);
-         }
+        {
+            $error['type']='error';
+            $error['msg'] = $e->getMessage();
+            return response()->json($error);
+        }
      } // function ends here
  
 

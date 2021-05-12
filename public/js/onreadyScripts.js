@@ -495,8 +495,8 @@ const shipOrder = async orderID=>{
                     </table>
                 </div>
                 <div class="relative w-full flex flex-col md:flex-row justify-around" >
-                    <button class="text-white mb-3 bg-yellow-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-md ">Get Invoice</button>
-                    <button onclick="create_label(${orderID})" class="text-white mb-3 bg-yellow-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-md">Create Label</button>
+                    <a href="https://www.shalooh.com/wp-admin/admin-ajax.php?action=generate_wpo_wcpdf&document_type=invoice&order_ids=${result[0].order_number}&order_key=${result[0].orderData1.order_key}" class="text-white mb-3 bg-yellow-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-md ">Get Invoice</a>
+                    <button onclick="create_label(${orderID}, ${result[0].order_number})" class="text-white mb-3 bg-yellow-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-md">Create Label</button>
                 </div>
             </div>
         </div>
@@ -762,7 +762,7 @@ const getCitiesByCountry = async (country) => {
     return resultCity;
 };
 
-const create_label = (orderID) => {
+const create_label = (orderID, order_number) => {
     let form = new FormData();
     form.append('_token', document.querySelector('meta[name=csrf-token]').getAttribute('content'));
     form.append('orderID', orderID);
@@ -771,22 +771,97 @@ const create_label = (orderID) => {
         method: 'POST', 
         body: form
     })
-    .then(res=>res.json()).then(result=>console.log(result));
-    // .then(res=>res.blob()).then(blob=>{
-    //     const url = window.URL.createObjectURL(blob);
-    //     const a = document.createElement('a');
-    //     a.style.display = 'none';
-    //     a.href = url;
-    //     if(blob.type == "application/zip"){
-    //         a.download = document.querySelector('#orderID').value+'_'+getCurrentDate()+'.zip';
-    //     } else {
-    //         a.download = document.querySelector('#orderID').value+'_'+getCurrentDate()+'.pdf';
-    //     }
-    //     document.body.appendChild(a);
-    //     a.click();
-    //     window.URL.revokeObjectURL(url);
+    // .then(res=>res.json()).then(result=>console.log(result));
+    .then(res=>res.blob()).then(blob=>{
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        if(blob.type == "application/zip"){
+            a.download = order_number+'_'+getCurrentDate()+'.zip';
+        } else {
+            a.download = order_number+'_'+getCurrentDate()+'.pdf';
+        }
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        window.location.reload();
         
-    // }).catch(() => alert('oh no!'));
+    }).catch((e) => console.log(e));
 
     
+};
+
+const viewOrder = async orderID=>{
+    let form = new FormData();
+    let token = document.querySelector('meta[name=csrf-token]').getAttribute('content');
+    form.append('_token', token);
+    form.append('orderID', orderID);
+
+    let response = await fetch('/ab-ajax/getShipOrderDetails', {method: 'POST', body: form});
+
+    let result = await response.json();
+
+    if(result.type == 'error')
+    {
+        alertify.alert(result.msg);
+        return;
+    }
+    //${orderID}, '${result[0].order_number}', '${result[0].customer_name}', '${result[0].customer_contact}', '${result[0].shipping_address1}
+    
+    let html = `
+        <div id="ViewOrderPopup">
+            <div class="header mb-8"><h1 class="text-center text-2xl uppercase font-bold text-yellow-500">Order Details</h1></div>
+            <div class="flex flex-col">
+                <div class="flex flex-row item-center justify-between">
+                    <h1 class="font-bold text-lg">Customer Details:</h1>
+                </div>
+                <div id="divCustomerDetails" class="relative mb-5 border-yellow-500 p-4 border-2 w-full rounded" >
+                    <p class="text-sm"><strong>Order Number:</strong> ${result[0].order_number}</p>
+                    <p class="text-sm"><strong>Customer Name:</strong> ${result[0].customer_name}</p>
+                    <p class="text-sm"><strong>Customer Contact:</strong> ${result[0].customer_contact}</p>
+                    <p class="text-sm"><strong>Shipping Address 1:</strong> ${result[0].shipping_address1}</p>
+                    <p class="text-sm"><strong>Shipping Address 2:</strong> ${(result[0].shipping_address2 !== null) ? result[0].shipping_address2 : ''}</p>
+                    <p class="text-sm"><strong>State / Province:</strong> ${(result[0].state !== null) ? result[0].state : ''}</p>
+                    <p class="text-sm"><strong>Postal/Zip</strong> ${(result[0].postal !== null) ? result[0].postal : ''}</p>
+                    <p class="text-sm"><strong>City:</strong> ${result[0].city}</p>
+                    <p class="text-sm"><strong>Country:</strong> ${result[0].country}</p>
+                </div>
+
+                <div><h1 class="font-bold text-lg">Payment Details: </h1></div>
+                <div class="relative mb-5 border-yellow-500 p-4 border-2 w-full rounded" >
+                    <p class="text-sm"><strong>Payment Method:</strong> ${result[0].payment_method}</p>
+                </div>
+                <div class="flex flex-row item-center justify-between">
+                    <h1 class="font-bold text-lg">Shipment Details: </h1>
+                </div>
+                <div id="divShippingDetails" class="relative mb-5 border-yellow-500 p-4 border-2 w-full rounded" >
+                    <p class="text-sm"><strong>Shipping Carrier:</strong> ${result[0].shipping_carrier}</p>
+                    <p class="text-sm"><strong>Tracking Number:</strong> ${result[0].tracking_no}</p>
+                    <p class="text-sm"><strong>Total Weight:</strong> ${result[0].total_weight}KG</p>
+                    <p class="text-sm"><strong>Total Volumetric Weight:</strong> ${result[0].total_vol_weight}Kg</p>
+                    <p class="text-sm"><strong>Package Dimensions:</strong> L: ${result[0].package_length}cm X W: ${result[0].package_width}cm X H: ${result[0].package_height}cm</p>
+                </div>
+          
+                <div><h1 class="font-bold text-lg">Ordered Products: </h1></div>
+                <div class="relative mb-5 border-yellow-500 p-4 border-2 w-full overflow-x-auto rounded" >
+                    <table class="table-auto w-full">
+                    <tbody>
+                        ${result.map(getproductHTMLForShipOrderPOPup).join('')}
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    `;
+
+    let options = {
+        basic:true,
+        maximizable:false,
+        resizable:false,
+        padding:true, 
+        closableByDimmer: false,
+    };
+    let viewDialog = makeDialog(html, options);
+
 };

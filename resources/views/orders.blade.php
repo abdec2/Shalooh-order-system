@@ -273,7 +273,7 @@
                                             <div class="py-8 grid grid-cols-12 gap-1">
                                                 <div class="col-span-12 sm:col-span-3">
                                                     <a 
-                                                        href="https://www.shalooh.com/wp-admin/admin-ajax.php?action=generate_wpo_wcpdf&document_type=invoice&order_ids={{$Order_ID}}&order_key={{$Order_Key}}" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                        href="https://www.shalooh.com/wp-admin/admin-ajax.php?action=generate_wpo_wcpdf&document_type=invoice&order_ids={{$Order_ID}}&order_key={{$Order_Key}}" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" target="_blank">
                                                         Get Invoice
                                                     </a>
                                                 </div>

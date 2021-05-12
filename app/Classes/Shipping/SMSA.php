@@ -74,7 +74,7 @@ class SMSA {
                          <way:senderAddress2>Block 711 Tubli</way:senderAddress2>
                          <way:senderCity>Manama</way:senderCity>
                          <way:senderCountry>BH</way:senderCountry>
-                         <way:recName>'.$order['first_name'].' '.$order['last_name'].'</way:recName>
+                         <way:recName>'.$order['customer_name'].'</way:recName>
                          <way:recPhone>'.$order['phone'].'</way:recPhone>
                          <way:recAddress1>'.$order['shipping_address1'].'</way:recAddress1>
                          <way:recAddress2>'.$order['shipping_address2'].'</way:recAddress2>

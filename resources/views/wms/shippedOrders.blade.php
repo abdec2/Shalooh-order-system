@@ -19,6 +19,47 @@
                                     <div class="mx-4 my-2 p-4 text-2xl">
                                         <h1 class="uppercase">Shipped Orders</h2>
                                     </div>
+
+                                    @if(count($orders) > 0)
+                                    <div class="mx-4 my-2 p-4 ">
+                                        <div class="overflow-x-auto" >
+                                            <table class="table-fixed">
+                                                <thead>
+                                                    <tr class="border-b-2">
+                                                        <th class="w-1/12 p-2 ">S.No</th>
+                                                        <th class="w-1/12 p-2 ">Order #</th>
+                                                        <th class="w-1/4 p-2 ">Order Date</th>
+                                                        <th class="w-1/6 p-2 ">Shipping Carrier</th>
+                                                        <th class="w-1/6 p-2 ">Shipping Method</th>
+                                                        <th class="w-1/6 p-2 ">View Order</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($orders as $order)
+                                                    <tr class="border-b-2">
+                                                        <td class="p-2 text-center " align="center">
+                                                            <input type="checkbox" id="order_id_{{ $order->id }}"
+                                                                name="order_id" value="{{ $order->id }}" />
+                                                        </td>
+                                                        <td class="p-2 text-center ">
+                                                            {{ $order->order_number }}</td>
+                                                        <td class="p-2 text-center ">
+                                                            {{ $order->order_date }}</td>
+                                                        <td class="p-2 text-center ">
+                                                            {{ $order->shipping_carrier }}</td>
+                                                        <td class="p-2 text-center ">
+                                                            {{ $order->payment_method }}</td>
+                                                        <td class="p-2 text-center ">
+                                                            <button class="w-full text-white bg-blue-500 hover:bg-blue-600 focus:outline-none rounded" onclick="viewOrder({{ $order->id }})">View</button>
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                            {{ $orders->links() }}
+                                        </div>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>

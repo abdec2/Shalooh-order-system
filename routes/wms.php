@@ -22,9 +22,7 @@ Route::get('/wms/orders/processing', [OrderController::class, 'listProcessingOrd
 
 Route::get('/wms/pick', [pickController::class, 'index'])->middleware(['auth'])->name('wms.pick');
 
-Route::get('/wms/orders/shipped', function () {
-    return view('wms/shippedOrders');
-})->middleware(['auth'])->name('wms.orders.shipped');
+Route::get('/wms/orders/shipped', [OrderController::class, 'listShippedOrders'])->middleware(['auth'])->name('wms.orders.shipped');
 
 Route::post('/wms/products/add_products', [ProductsController::class, 'add_products'])->middleware(['auth'])->name('wms.products.add_products');
 

@@ -30,4 +30,15 @@ class OrderController extends Controller
 
         return view('wms/processOrders', ['orders'=>$orders, 'users'=>$users]);
     } // function ends here
+
+    function listShippedOrders(Request $request)
+    {
+        $orders = DB::table('orders')->select('orders.*','shipping_carrier.shipping_carrier')->join('order_status', 'orders.order_status_id','=','order_status.id')->where(strtoupper('order_status.status'), '=', strtoupper('Shipped'))
+        ->join('shipping_carrier', 'shipping_carrier.id','=','orders.shipping_carrier_id')
+        ->paginate(10);
+
+        $users = User::all();
+
+        return view('wms/shippedOrders', ['orders'=>$orders, 'users'=>$users]);
+    } // function ends here
 }

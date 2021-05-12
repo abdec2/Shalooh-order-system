@@ -86,7 +86,7 @@
                 <td colspan="2">
                     <p>
                         &nbsp;To:
-                        {{ $data['phone'] }}<br />{{ $data['first_name'].' '.$data['last_name'] }}<br />{{ $data['shipping_address1'] }}<br />{{$data['shipping_address2']}}&nbsp;<br />{{$data['city']}}&nbsp;<br />{{ $data['country']}}
+                        {{ $data['phone'] }}<br />{{ $data['customer_name'] }}<br />{{ $data['shipping_address1'] }}<br />{{$data['shipping_address2']}}&nbsp;<br />{{$data['city']}}&nbsp;<br />{{ $data['country']}}
                     </p>
                 </td>
             </tr>

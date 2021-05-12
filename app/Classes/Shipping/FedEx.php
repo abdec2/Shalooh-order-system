@@ -71,7 +71,7 @@ class FedEx {
         
         $recipientContact = new ComplexType\Contact();
         $recipientContact
-            ->setPersonName($order['first_name'].' '.$order['last_name'])
+            ->setPersonName($order['customer_name'])
             ->setPhoneNumber($order['phone']);
         
         $recipient = new ComplexType\Party();

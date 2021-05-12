@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\ApiController;
 use App\Http\Controllers\FedExController;
 use App\Http\Controllers\wms\location\LocationController;
+use App\Http\Controllers\wms\api\OrderReceiveController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,7 +24,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('order', [ApiController::class, 'newOrder']);
 Route::post('order/update', [ApiController::class, 'updateOrder']);
-Route::post('fedex', [FedExController::class, 'create']);
-Route::post('get_rates', [FedExController::class, 'getRates']);
+
+Route::post('/wms/order/receive', [OrderReceiveController::class, 'OrderReceive']);
+// Route::post('fedex', [FedExController::class, 'create']);
+// Route::post('get_rates', [FedExController::class, 'getRates']);
 
 // Route::post('/wms/generate/locations', [LocationController::class, 'GenerateLocation']);
