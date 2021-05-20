@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Http\Controllers\wms\orders\OrderController;
 use App\Http\Controllers\wms\pickController;
+use App\Http\Controllers\wms\CronJobController; 
 
 Route::get('/wms/products/list', [ProductsController::class, 'ListProducts'])->middleware(['auth'])->name('wms.list_products');
 
@@ -49,6 +50,11 @@ Route::post('/ab-ajax/getCountries', [AjaxController::class, 'getCountries'])->m
 Route::post('/ab-ajax/getCitiesByCountry', [AjaxController::class, 'getCitiesByCountry'])->middleware(['auth']);
 
 Route::post('/ab-ajax/createLabelAndShipOrder', [AjaxController::class, 'createLabelAndShipOrder'])->middleware(['auth']);
+
+
+Route::get('/wms/websitestock/trigger/{sk}', [CronJobController::class, 'StockUpdateTrigger'])->middleware(['verify.cron']);
+Route::get('/wms/websitestock/process/{sk}', [CronJobController::class, 'StockUpdateProcess'])->middleware(['verify.cron']);
+
 
 
 // Route::get('/wms/generate/bins', [BinController::class, 'generateBins'])->middleware(['auth'])->name('wms.generate.bins');

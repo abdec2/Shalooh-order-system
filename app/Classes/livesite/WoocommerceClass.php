@@ -2,6 +2,7 @@
 
 namespace App\Classes\livesite;
 
+use Illuminate\Http\Client\Pool;
 use Illuminate\Support\Facades\Http;
 
 class WoocommerceClass {
@@ -52,5 +53,24 @@ class WoocommerceClass {
             echo $e->getMessage();
         }
     }
+
+    static public function getProduct ($url, $data)
+    {
+        $user = env('WOOCOMMERCE_CONSUMER_KEY');
+        $pass = env('WOOCOMMERCE_SECRET');
+
+        $response = Http::withBasicAuth($user, $pass)->get($url, $data);
+
+        return $response->getBody()->getContents();
+    } // function ends here
+
+    static public function stockUpdate($url, $data)
+    {
+        $user = env('WOOCOMMERCE_CONSUMER_KEY');
+        $pass = env('WOOCOMMERCE_SECRET');
+
+        $response = Http::withBasicAuth($user, $pass)->withBody($data, 'application/json')->put($url);
+
+    } // function ends here
 
 } // class ends here

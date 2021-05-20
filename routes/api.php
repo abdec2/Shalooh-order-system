@@ -25,7 +25,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('order', [ApiController::class, 'newOrder']);
 Route::post('order/update', [ApiController::class, 'updateOrder']);
 
-Route::post('/wms/order/receive', [OrderReceiveController::class, 'OrderReceive']);
+Route::post('/wms/order/receive', [OrderReceiveController::class, 'OrderReceive'])->middleware(['verify.webhook']);
+
 // Route::post('fedex', [FedExController::class, 'create']);
 // Route::post('get_rates', [FedExController::class, 'getRates']);
 

@@ -12,21 +12,7 @@ class OrderReceiveController extends Controller
     {
         try
         {
-            if($request->hasHeader('x-wc-webhook-resource') && $request->header('x-wc-webhook-resource') !== 'order')
-            {
-                $response = [];
-                $response['status_code'] = 400;
-                $response['msg'] = 'Bad Request';
-                return response()->json($response);
-            }
-
-            if($request->hasHeader('x-wc-webhook-event') && $request->header('x-wc-webhook-event') !== 'created')
-            {
-                $response = [];
-                $response['status_code'] = 400;
-                $response['msg'] = 'Bad Request';
-                return response()->json($response);
-            }
+            dd('in'); 
         }
         catch(\Exception $e)
         {

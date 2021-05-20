@@ -39,7 +39,7 @@ class ProductsController extends Controller
 
     function ListProducts(Request $request)
     {
-        $products = Products::paginate(10);
+        $products = Products::where('is_parent', 'N')->paginate(10);
 
         return view('wms/wms', compact('products'));
     } // function ends here

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProductsTable extends Migration
+class CreateCronJobTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateProductsTable extends Migration
      */
     public function up()
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('cron_job', function (Blueprint $table) {
             $table->id();
-            $table->string('label');
-            $table->string('sku')->unique();
-            $table->integer('parent')->nullable();
-            $table->string('image_path', 255)->nullable();
-            $table->char('is_parent', 1)->default('N');
+            $table->string('cron_type', 100); 
+            $table->string('status', 10); 
+            $table->integer('last_pid')->nullable();
+            $table->foreign('last_pid')->references('id')->on('products');
+            $table->string('sku', 20)->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ class CreateProductsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('cron_job');
     }
 }
