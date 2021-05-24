@@ -454,6 +454,11 @@ class AjaxController extends Controller
             $orderArray['package_height'] = $order[0]->package_height;
             $orderArray['orderData'] = $orderData;
 
+            if( $orderArray['package_length'] == null || $orderArray['package_width']  == null || $orderArray['package_height'] == null )
+            {
+                throw new \Exception('Please enter the Package dimensions.');
+            }
+
             if(strtoupper($order[0]->shipping_carrier->shipping_carrier) !== strtoupper('TNT Express'))
             {
                 $shipment = new Shipment($order[0]->shipping_carrier->shipping_carrier, $orderArray);

@@ -15,7 +15,7 @@ class Orders extends Model
     protected $table = 'orders';
     protected $primaryKey = 'id';
 
-    protected $fillable = ['order_number', 'shipping_carrier_id', 'order_date', 'payment_method', 'order_status_id', 'shipping_address'];
+    protected $fillable = ['order_number','customer_name','customer_contact', 'order_date', 'shipping_carrier_id', 'order_date','payment_method', 'order_status_id', 'shipping_address1', 'city', 'country'];
 
     function OrderStatus()
     {
