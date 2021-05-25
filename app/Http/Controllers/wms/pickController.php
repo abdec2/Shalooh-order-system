@@ -11,13 +11,13 @@ class pickController extends Controller
 {
     function index(Request $request)
     {
-        $UserAssignedOrders = OrderAssignedUser::where('user_id', $request->user()->id)->where(strtoupper('status'), strtoupper('pending'))
+        $UserAssignedOrders = OrderAssignedUser::where('user_id', $request->user()->id)->where('status', 'pending')
                                 ->with(['order' => function($q){
                                     $q->with('OrderStatus');
                                 }])
                                 ->whereHas('order', function($q){
                                     $q->whereHas('OrderStatus', function($que){
-                                        $que->where(strtoupper('status'), strtoupper('Processing'));
+                                        $que->where('status', 'Processing');
                                     });
                                 })
                                 ->get();

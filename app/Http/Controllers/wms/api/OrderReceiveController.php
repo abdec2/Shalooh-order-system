@@ -25,7 +25,7 @@ class OrderReceiveController extends Controller
             $shippingCarrier =  ShippingCarriers::where('shipping_method', $request->shipping_lines[0]['method_title'])->get();
             
             // getting order status id from db
-            $orderStatus = OrderStatus::where(strtoupper('status'), strtoupper('pending'))->get();
+            $orderStatus = OrderStatus::where('status', 'Pending')->get();
             if( count($orderStatus) == 0 )
             {
                 throw new \Exception('Order status not found');

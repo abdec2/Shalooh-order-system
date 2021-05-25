@@ -32,7 +32,7 @@ class AjaxController extends Controller
     {
         try{
             $order_ids = json_decode($request->order_id);
-            $statusId = OrderStatus::where(strtoupper('status'), strtoupper('Processing'))->get();
+            $statusId = OrderStatus::where('status', 'Processing')->get();
 
             foreach($order_ids as $orderId)
             {
@@ -106,13 +106,13 @@ class AjaxController extends Controller
     function fetchUserAssignedOrders(Request $request) {
         try {
 
-            $UserAssignedOrders = OrderAssignedUser::where('user_id', $request->user()->id)->where(strtoupper('status'), strtoupper('pending'))
+            $UserAssignedOrders = OrderAssignedUser::where('user_id', $request->user()->id)->where('status', 'pending')
                                 ->with(['order' => function($q){
                                     $q->with('OrderStatus');
                                 }])
                                 ->whereHas('order', function($q){
                                     $q->whereHas('OrderStatus', function($que){
-                                        $que->where(strtoupper('status'), strtoupper('Processing'));
+                                        $que->where('status', 'Processing');
                                     });
                                 })
                                 ->get();
@@ -133,7 +133,7 @@ class AjaxController extends Controller
     {
         try
         {
-            $isExist = OrderAssignedUser::where( strtoupper('status'), strtoupper('pending') )->where( strtoupper('pick_tray'), strtoupper($request->tray) )->where('user_id', $request->user()->id)->get();
+            $isExist = OrderAssignedUser::where( 'status', 'pending' )->where( 'pick_tray', $request->tray)->where('user_id', $request->user()->id)->get();
 
             if( count($isExist) > 0 )
             {
@@ -167,14 +167,14 @@ class AjaxController extends Controller
     function pickNpackInit(Request $request)
     {   
         try{
-            $UserAssignedOrders = OrderAssignedUser::where('user_id', $request->user()->id)->where(strtoupper('status'), strtoupper('pending'))
+            $UserAssignedOrders = OrderAssignedUser::where('user_id', $request->user()->id)->where('status', 'pending')
                                 ->where('pick_tray', '!=', NULL)
                                 ->with(['order' => function($q){
                                     $q->with('OrderStatus');
                                 }])
                                 ->whereHas('order', function($q){
                                     $q->whereHas('OrderStatus', function($que){
-                                        $que->where(strtoupper('status'), strtoupper('Processing'));
+                                        $que->where('status', 'Processing');
                                     });
                                 })
                                 ->get();

@@ -14,7 +14,7 @@ class CronJobController extends Controller
     {
         try
         {
-            $exist = CronJobModel::where(strtoupper('status'), strtoupper('process'))->where(strtoupper('cron_type'), strtoupper('Update Cron'))->get();
+            $exist = CronJobModel::where('status', 'process')->where('cron_type', 'Update Cron')->get();
 
             if( count($exist) > 0 )
             {
@@ -44,7 +44,7 @@ class CronJobController extends Controller
         try
         {
             // get cron details
-            $cron = CronJobModel::where(strtoupper('status'), strtoupper('process'))->where(strtoupper('cron_type'), strtoupper('Update Cron'))->get();
+            $cron = CronJobModel::where('status', 'process')->where('cron_type', 'Update Cron')->get();
             // check if there is any running job
             if(count($cron) == 0)
             {
