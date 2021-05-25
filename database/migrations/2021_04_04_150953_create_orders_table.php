@@ -19,7 +19,7 @@ class CreateOrdersTable extends Migration
             $table->string('customer_name', 255);
             $table->string('customer_contact', 50);
             $table->text('order_data')->nullable();
-            $table->bigInteger('shipping_carrier_id')->nullable();
+            $table->bigInteger('shipping_carrier_id', 20)->nullable();
             $table->foreign('shipping_carrier_id')->references('id')->on('shipping_carrier');
             $table->dateTime('order_date', $precision = 0);
             $table->string('payment_method', 100);
