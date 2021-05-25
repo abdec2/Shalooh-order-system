@@ -14,16 +14,16 @@ class CreateOrdersTable extends Migration
     public function up()
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->bigInteger('order_number');
             $table->string('customer_name', 255);
             $table->string('customer_contact', 50);
             $table->text('order_data')->nullable();
-            $table->bigInteger('shipping_carrier_id')->nullable();
+            $table->integer('shipping_carrier_id')->nullable();
             $table->foreign('shipping_carrier_id')->references('id')->on('shipping_carrier');
             $table->dateTime('order_date', $precision = 0);
             $table->string('payment_method', 100);
-            $table->bigInteger('order_status_id');
+            $table->integer('order_status_id');
             $table->foreign('order_status_id')->references('id')->on('order_status');
             $table->string('shipping_address1', 1000);
             $table->string('shipping_address2', 1000)->nullable();
