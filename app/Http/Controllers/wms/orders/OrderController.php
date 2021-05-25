@@ -13,7 +13,7 @@ class OrderController extends Controller
 {
     function listPendingOrders(Request $request)
     {
-        $orders = DB::table('orders')->select('orders.*', 'shipping_carrier.shipping_carrier')->join('order_status', 'orders.order_status_id','=','order_status.id')->where(strtoupper('order_status.status'), '=', strtoupper('Pending'))
+        $orders = DB::table('orders')->select('orders.*', 'shipping_carrier.shipping_carrier')->join('order_status', 'orders.order_status_id','=','order_status.id')->where(strtoupper('order_status.status'), strtoupper('Pending'))
         ->join('shipping_carrier', 'shipping_carrier.id','=','orders.shipping_carrier_id')
         ->paginate(10);
         // dd($orders);
