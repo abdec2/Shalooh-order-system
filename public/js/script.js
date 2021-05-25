@@ -24,22 +24,50 @@ if(document.querySelector('#btnCreateLbl') !== null)
             fetch('/create_label', {
                 method: 'POST', 
                 body: formData
-            }).then(res=>res.blob()).then(blob=>{
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = url;
-                if(blob.type == "application/zip"){
-                    a.download = document.querySelector('#orderID').value+'_'+getCurrentDate()+'.zip';
+            }).then(res=>{
+                const contentType = res.headers.get("content-type");
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    return res.json().then(data => {
+                    // process your JSON data further
+                    console.log(data);
+                    });
                 } else {
-                    a.download = document.querySelector('#orderID').value+'_'+getCurrentDate()+'.pdf';
+                    return res.blob().then(blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+                        if(blob.type == "application/zip"){
+                            a.download = document.querySelector('#orderID').value+'_'+getCurrentDate()+'.zip';
+                        } else {
+                            a.download = document.querySelector('#orderID').value+'_'+getCurrentDate()+'.pdf';
+                        }
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                        form.submit();
+                    });
                 }
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                form.submit();
+            });
+            
+            
+            
+            // .then(res=>res.blob()).then(blob=>{
+            //     const url = window.URL.createObjectURL(blob);
+            //     const a = document.createElement('a');
+            //     a.style.display = 'none';
+            //     a.href = url;
+            //     if(blob.type == "application/zip"){
+            //         a.download = document.querySelector('#orderID').value+'_'+getCurrentDate()+'.zip';
+            //     } else {
+            //         a.download = document.querySelector('#orderID').value+'_'+getCurrentDate()+'.pdf';
+            //     }
+            //     document.body.appendChild(a);
+            //     a.click();
+            //     window.URL.revokeObjectURL(url);
+            //     form.submit();
 
-            }).catch(() => alert('oh no!'));
+            // }).catch(() => alert('oh no!'));
 
             // fetch('/create_label', {
             //     method: 'POST', 
