@@ -14,7 +14,7 @@ class CreateOrderStatusTable extends Migration
     public function up()
     {
         Schema::create('order_status', function (Blueprint $table) {
-            $table->id();
+            $table->bigInteger('id')->autoIncrement();
             $table->string('status', 25);
             $table->timestamps();
         });

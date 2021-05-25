@@ -14,7 +14,7 @@ class CreateShippingCarrierTable extends Migration
     public function up()
     {
         Schema::create('shipping_carrier', function (Blueprint $table) {
-            $table->id();
+            $table->bigInteger('id')->autoIncrement();
             $table->string('shipping_carrier', 100);
             $table->string('shipping_method', 100);
             $table->timestamps();
