@@ -15,7 +15,7 @@ class CreateOrderAssignedUsersTable extends Migration
     {
         Schema::create('order_assigned_users', function (Blueprint $table) {
             $table->bigInteger('id')->autoIncrement();
-            $table->bigInteger('user_id');
+            $table->bigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
             $table->bigInteger('order_id');
             $table->foreign('order_id')->references('id')->on('orders');
