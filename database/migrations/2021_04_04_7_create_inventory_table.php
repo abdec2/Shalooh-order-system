@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateHurtStockTable extends Migration
+class CreateInventoryTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateHurtStockTable extends Migration
      */
     public function up()
     {
-        Schema::create('hurt_stock', function (Blueprint $table) {
-            $table->id();
-            $table->integer('bin_id');
+        Schema::create('inventory', function (Blueprint $table) {
+            $table->bigInteger('id')->autoIncrement();
+            $table->bigInteger('bin_id');
             $table->foreign('bin_id')->references('id')->on('bins');
-            $table->integer('hurt_qty');
+            $table->integer('quantity');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateHurtStockTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hurt_stock');
+        Schema::dropIfExists('inventory');
     }
 }

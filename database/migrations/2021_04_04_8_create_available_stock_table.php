@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLocationCategoriesTable extends Migration
+class CreateAvailableStockTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class CreateLocationCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('location_categories', function (Blueprint $table) {
-            $table->id();
-            $table->string('category', 100);
+        Schema::create('available_stock', function (Blueprint $table) {
+            $table->bigInteger('id')->autoIncrement();
+            $table->bigInteger('product_id');
+            $table->foreign('product_id')->references('id')->on('products');
+            $table->integer('available_qty');
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ class CreateLocationCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('location_categories');
+        Schema::dropIfExists('available_stock');
     }
 }

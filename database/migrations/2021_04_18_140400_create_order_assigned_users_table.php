@@ -14,10 +14,10 @@ class CreateOrderAssignedUsersTable extends Migration
     public function up()
     {
         Schema::create('order_assigned_users', function (Blueprint $table) {
-            $table->id();
-            $table->integer('user_id');
+            $table->bigInteger('id')->autoIncrement();
+            $table->bigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->integer('order_id');
+            $table->bigInteger('order_id');
             $table->foreign('order_id')->references('id')->on('orders');
             $table->string('pick_tray', 30)->nullable();
             $table->string('status', 10);

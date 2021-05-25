@@ -14,10 +14,10 @@ class CreateHoldStockTable extends Migration
     public function up()
     {
         Schema::create('hold_stock', function (Blueprint $table) {
-            $table->id();
-            $table->integer('avail_stock_id');
+            $table->bigInteger('id')->autoIncrement();
+            $table->bigInteger('avail_stock_id');
             $table->foreign('avail_stock_id')->references('id')->on('available_stock');
-            $table->integer('order_id');
+            $table->bigInteger('order_id');
             $table->foreign('order_id')->references('id')->on('orders');
             $table->integer('hold_qty');
             $table->timestamps();

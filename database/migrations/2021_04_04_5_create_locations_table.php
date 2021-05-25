@@ -14,9 +14,9 @@ class CreateLocationsTable extends Migration
     public function up()
     {
         Schema::create('locations', function (Blueprint $table) {
-            $table->id();
+            $table->bigInteger('id')->autoIncrement();
             $table->string('location', 30);
-            $table->integer('location_category_id');
+            $table->bigInteger('location_category_id');
             $table->foreign('location_category_id')->references('id')->on('location_categories');
             $table->integer('total_bins')->nullable();
             $table->integer('bins_in_use')->nullable();

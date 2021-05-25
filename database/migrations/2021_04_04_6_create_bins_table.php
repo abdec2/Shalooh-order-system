@@ -14,11 +14,11 @@ class CreateBinsTable extends Migration
     public function up()
     {
         Schema::create('bins', function (Blueprint $table) {
-            $table->id();
+            $table->bigInteger('id')->autoIncrement();
             $table->string('bin_location', 50);
-            $table->integer('location_id');
+            $table->bigInteger('location_id');
             $table->foreign('location_id')->references('id')->on('locations');
-            $table->integer('product_id')->nullable();
+            $table->bigInteger('product_id')->nullable();
             $table->foreign('product_id')->references('id')->on('products');
             $table->bigInteger('tag_number')->nullable();
             $table->timestamps();

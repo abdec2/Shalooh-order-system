@@ -14,10 +14,10 @@ class CreateOrderItemsTable extends Migration
     public function up()
     {
         Schema::create('order_items', function (Blueprint $table) {
-            $table->id();
-            $table->integer('order_id');
+            $table->bigInteger('id')->autoIncrement();
+            $table->bigInteger('order_id');
             $table->foreign('order_id')->references('id')->on('orders');
-            $table->integer('product_id')->nullable();
+            $table->bigInteger('product_id')->nullable();
             $table->foreign('product_id')->references('id')->on('products');
             $table->integer('order_qty');
             $table->timestamps();

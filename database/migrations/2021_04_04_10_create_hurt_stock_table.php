@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAvailableStockTable extends Migration
+class CreateHurtStockTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateAvailableStockTable extends Migration
      */
     public function up()
     {
-        Schema::create('available_stock', function (Blueprint $table) {
-            $table->id();
-            $table->integer('product_id');
-            $table->foreign('product_id')->references('id')->on('products');
-            $table->integer('available_qty');
+        Schema::create('hurt_stock', function (Blueprint $table) {
+            $table->bigInteger('id')->autoIncrement();
+            $table->bigInteger('bin_id');
+            $table->foreign('bin_id')->references('id')->on('bins');
+            $table->integer('hurt_qty');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateAvailableStockTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('available_stock');
+        Schema::dropIfExists('hurt_stock');
     }
 }

@@ -14,10 +14,10 @@ class CreateCronJobTable extends Migration
     public function up()
     {
         Schema::create('cron_job', function (Blueprint $table) {
-            $table->id();
+            $table->bigInteger('id')->autoIncrement();
             $table->string('cron_type', 100); 
             $table->string('status', 10); 
-            $table->integer('last_pid')->nullable();
+            $table->bigInteger('last_pid')->nullable();
             $table->foreign('last_pid')->references('id')->on('products');
             $table->string('sku', 20)->nullable();
             $table->timestamps();
