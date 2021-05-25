@@ -220,7 +220,7 @@ class Order extends Controller
                     $shipment = new Shipment($orderDetails[0]->shipping_method, $orderArray);
                     $result = $shipment->addShip();
 
-                    print_r($result); die();
+                    // print_r($result); die();
 
                     $orderUpdate = OrderDetails::find($orderDetails[0]->id);
                     $orderUpdate->OrderDetails1()->update([
