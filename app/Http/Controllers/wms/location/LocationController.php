@@ -76,7 +76,7 @@ class LocationController extends Controller
         {
             for($i=0; $i < 1000; $i++)
             {
-                $binLocation = $addressString.(($i < 10) ? '00'.$i : ($i > 10 && $i < 100) ? '0'.$i : $i);
+                $binLocation = $addressString.((($i < 10) ? '00'.$i : ($i > 10 && $i < 100)) ? '0'.$i : $i);
                 // $tagNumber = $tagNumber+1;
                 $data = [
                     'bin_location' => $binLocation,
