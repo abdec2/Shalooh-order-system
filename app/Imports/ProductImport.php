@@ -27,9 +27,12 @@ class ProductImport implements ToCollection, WithHeadingRow
             // check sku exist or not
             $product = Products::where('sku', $row['sku'])->get();
             // check bin exist or not
-            $bin = Bins::where('bin_location', $row['bin_location'])->get();
+            $bin = Bins::where('bin_location', $row['bin_location'])->with(['Locations'=>function($q){
+                $q->with('LocationCategories');
+            }])->get();
             $productID = NULL;
             $parentSkuId = NULL;
+            $locationCatagory = NULL;
             
             // check for parent sku
             if($row['parent_sku'] !== null)
@@ -90,6 +93,8 @@ class ProductImport implements ToCollection, WithHeadingRow
             if(count($bin) > 0) {
                 if($bin[0]->product_id == $productID || $bin[0]->product_id == null)
                 {
+                    $locationCatagory = $bin[0]->Locations->LocationCategories->category;
+
                     Log::channel('addProduct')->info('Assigning bin location '.$bin[0]->bin_location.' to SKU '. $row['sku']);
                     $updateBinRecord = Bins::find($bin[0]->id);
                     $updateBinRecord->product_id = $productID;
@@ -107,7 +112,23 @@ class ProductImport implements ToCollection, WithHeadingRow
                         $inventoryInsert->bin_id = $bin[0]->id;
                         $inventoryInsert->quantity = $row['qty'];
                         $inventoryInsert->save();
+                    }
 
+                    if(strtoupper($locationCatagory) !== strtoupper('Hurt'))
+                    {
+                        $avail_stock = AvailableStocks::where('product_id', $productID)->get();
+                        if(count($avail_stock) > 0) 
+                        {
+                            $avstock = AvailableStocks::find($avail_stock[0]->id);
+                            $avstock->available_qty = (int)$avail_stock[0]->available_qty + (int)$row['qty'];
+                            $avstock->save();
+                        }
+                        else {
+                            $a_stock = new AvailableStocks;
+                            $a_stock->product_id = $productID;
+                            $a_stock->available_qty = (int)$row['qty'];
+                            $a_stock->save();
+                        }
                     }
 
                 } else {
@@ -116,20 +137,7 @@ class ProductImport implements ToCollection, WithHeadingRow
                 }
             }
 
-            $avail_stock = AvailableStocks::where('product_id', $productID)->get();
-            if(count($avail_stock) > 0) 
-            {
-                $avstock = AvailableStocks::find($avail_stock[0]->id);
-                $avstock->available_qty = (int)$avail_stock[0]->available_qty + (int)$row['qty'];
-                $avstock->save();
-            }
-            else {
-                $a_stock = new AvailableStocks;
-                $a_stock->product_id = $productID;
-                $a_stock->available_qty = (int)$row['qty'];
-                $a_stock->save();
-
-            }
+            
 
 
 

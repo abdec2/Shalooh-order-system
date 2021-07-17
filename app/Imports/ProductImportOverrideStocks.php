@@ -27,9 +27,12 @@ class ProductImportOverrideStocks implements ToCollection, WithHeadingRow
             // check sku exist or not
             $product = Products::where('sku', $row['sku'])->get();
             // check bin exist or not
-            $bin = Bins::where('bin_location', $row['bin_location'])->get();
+            $bin = Bins::where('bin_location', $row['bin_location'])->with(['Locations'=>function($q){
+                $q->with('LocationCategories');
+            }])->get();
             $productID = NULL;
             $parentSkuId = NULL;
+            $locationCatagory = NULL;
             
             // check for parent sku
             if($row['parent_sku'] !== null)
@@ -87,6 +90,7 @@ class ProductImportOverrideStocks implements ToCollection, WithHeadingRow
                 Log::channel('addProduct')->info($row['sku']. ' created.');
             }
 
+
             if(count($bin) > 0) {
                 if($bin[0]->product_id == $productID || $bin[0]->product_id == null)
                 {
@@ -116,7 +120,12 @@ class ProductImportOverrideStocks implements ToCollection, WithHeadingRow
                 }
             }
 
-            $bin1 = Bins::where('product_id', $productID)->with('Inventory')->get();
+            // $bin1 = Bins::where('product_id', $productID)->with('Inventory')->get();
+            $bin1 = Bins::where('product_id', $productID)->with('Inventory')->whereHas('Locations', function($q){
+                $q->whereHas('LocationCategories', function($que){
+                    $que->where('category', '!=', 'Hurt');
+                });
+            })->get();
             if(count($bin1) > 0) 
             {
                 $avail_qty = 0;
@@ -136,9 +145,7 @@ class ProductImportOverrideStocks implements ToCollection, WithHeadingRow
                     $a_stock->product_id = $productID;
                     $a_stock->available_qty = (int)$avail_qty;
                     $a_stock->save();
-
                 }
-
 
             }
             

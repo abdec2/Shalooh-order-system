@@ -196,6 +196,7 @@ class AjaxController extends Controller
                             ->join('inventory', 'inventory.bin_id', '=', 'bins.id')
                             ->where('order_items.order_id', '=', $item->order_id)
                             ->where('inventory.quantity', '>', 'order_items.order_qty')
+                            ->where('locations.location_category_id', '!=', 11)
                             ->orderBy('bins.tag_number', 'asc')
                             ->groupBy('sku')
                             ->get();

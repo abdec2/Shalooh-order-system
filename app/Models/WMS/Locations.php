@@ -4,6 +4,8 @@ namespace App\Models\WMS;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\WMS\Bins;
+use App\Models\WMS\LocationCategories;
 
 class Locations extends Model
 {
@@ -15,4 +17,11 @@ class Locations extends Model
     function Bins() {
         return $this->hasMany(Bins::class, 'location_id');
     }
+
+    function LocationCategories()
+    {
+        return $this->belongsTo(LocationCategories::class, 'location_category_id');
+    }
+
+    
 }
