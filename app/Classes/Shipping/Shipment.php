@@ -67,9 +67,8 @@ class Shipment {
             $this->result['file']=$mpdf->Output('', 'S');
         }
         else {
-            $keyArabia = new KeyArabia($this->order);
-            $response = $keyArabia->place_order();
-            $this->result['tracking_number'] = $response->body();
+
+            $this->result['tracking_number'] = $this->order['Order_ID'];
 
             $mpdf = new \Mpdf\Mpdf([
                 'mode' => 'utf-8',
@@ -82,12 +81,37 @@ class Shipment {
                 'margin_header' =>0,
                 'margin_footer' => 0
             ]);
-            $KeyArabiaArray = $this->order;
-            $KeyArabiaArray['task_id'] = $this->result['tracking_number'];
-            $html = \View::make('template.shippingLabel')->with('data', $KeyArabiaArray);
+            $LDArray = $this->order;
+            $logo = file_get_contents('./img/logo.png');
+            $logo = 'data:image/png;base64,' . base64_encode($logo);
+            $LDArray['logo'] = $logo;
+            
+            $LDArray['task_id'] = $this->result['tracking_number'];
+            $html = \View::make('template.vipDelivery')->with('data', $LDArray);
             $html = $html->render();
             $mpdf->WriteHTML($html);
             $this->result['file']=$mpdf->Output('', 'S');
+            // $keyArabia = new KeyArabia($this->order);
+            // $response = $keyArabia->place_order();
+            // $this->result['tracking_number'] = $response->body();
+
+            // $mpdf = new \Mpdf\Mpdf([
+            //     'mode' => 'utf-8',
+            //     'format' => [101, 152],
+            //     'orientation'=>'p',
+            //     'margin-left' => 0,
+            //     'margin-right' => 0,
+            //     'margin-top' => 0, 
+            //     'margin-bottom' => 0,
+            //     'margin_header' =>0,
+            //     'margin_footer' => 0
+            // ]);
+            // $KeyArabiaArray = $this->order;
+            // $KeyArabiaArray['task_id'] = $this->result['tracking_number'];
+            // $html = \View::make('template.shippingLabel')->with('data', $KeyArabiaArray);
+            // $html = $html->render();
+            // $mpdf->WriteHTML($html);
+            // $this->result['file']=$mpdf->Output('', 'S');
         }
 
         return $this->result;
