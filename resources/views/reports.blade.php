@@ -87,7 +87,7 @@
                                     <td align="center">{{ $order->billing->first_name.' '.$order->billing->last_name }}</td>
                                     <td align="center">{{ $order->billing->email }}</td>
                                     <td align="center">{{ $order->billing->phone }}</td>
-                                    <td align="center">{{ $order->shipping_lines[0]->method_title }}</td>
+                                    <td align="center">{{ isset($order->shipping_lines[0]->method_title) ? $order->shipping_lines[0]->method_title : '' }}</td>
                                     <td align="center">{{ $order->payment_method_title }}</td>
                                     <td align="center">{{ (float)$order->total - (float)$order->total_tax - (float)$order->shipping_total }}</td>
                                     <td align="center">{{ $order->total_tax }}</td>
