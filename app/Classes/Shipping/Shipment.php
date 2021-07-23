@@ -67,7 +67,7 @@ class Shipment {
             $this->result['file']=$mpdf->Output('', 'S');
         }
         else {
-
+            dd($this->order);
             $this->result['tracking_number'] = $this->order['Order_ID'];
 
             $mpdf = new \Mpdf\Mpdf([
