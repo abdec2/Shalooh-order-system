@@ -75,7 +75,7 @@
                 <td>
                     <p>SHIP DATE: {{ date('Y-m-d') }}</p>
                     <p style="font-weight: bold; font-size: 16px;" >ORDER #: {{ $data['Order_ID'] }}</p>
-                    @if( $data['payment_method'] == 'cod' )
+                    @if( $data['orderData']['payment_method'] == 'cod' )
                         <p><b>Payment Method:</b> Cash on Delivery</p>
                         <p><b>Amount:</b> BD {{ $data['order_amount'] }}</p>
                     @else
@@ -87,7 +87,7 @@
                 <td colspan="2">
                     <p>
                         &nbsp;To:
-                        {{ $data['phone'] }}<br />{{ $data['first_name'] .' '. $data['last_name'] }}<br />{{ $data['shipping_address1'] }}<br />{{$data['shipping_address2']}}&nbsp;<br />{{$data['city']}}&nbsp;<br />{{ $data['country']}}
+                        {{ $data['phone'] }}<br />{{ $data['customer_name'] }}<br />{{ $data['shipping_address1'] }}<br />{{$data['shipping_address2']}}&nbsp;<br />{{$data['city']}}&nbsp;<br />{{ $data['country']}}
                     </p>
                 </td>
             </tr>
