@@ -74,3 +74,8 @@ input:read-only {
 #frmPickProducts .tab {
     display: none;
 }
+
+.productInfo a {
+    color: #3f8cff; 
+    cursor: pointer;
+}

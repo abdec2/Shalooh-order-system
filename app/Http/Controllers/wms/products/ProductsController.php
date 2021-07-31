@@ -39,8 +39,7 @@ class ProductsController extends Controller
 
     function ListProducts(Request $request)
     {
-        $products = Products::where('is_parent', 'N')->paginate(10);
-
-        return view('wms/wms', compact('products'));
+        $products = Products::where('is_parent', 'N')->get();
+        return view('wms/wms', ['products' => $products->all()]);
     } // function ends here
 }

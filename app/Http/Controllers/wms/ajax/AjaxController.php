@@ -11,6 +11,7 @@ use App\Models\WMS\pickList;
 use App\Models\WMS\countriesModel;
 use App\Models\WMS\citiesModel;
 use App\Models\WMS\Inventory;
+use App\Models\WMS\Products;
 
 use App\Classes\Shipping\Shipment;
 use App\Classes\livesite\WoocommerceClass;
@@ -489,6 +490,22 @@ class AjaxController extends Controller
                     return response()->attachment($result['file']);
                 }
             }
+        }
+        catch(\Exception $e)
+        {
+            $error['type']='error';
+            $error['msg'] = $e->getMessage();
+            return response()->json($error);
+        }
+     } // function ends here
+
+     function getProductInfo (Request $request) {
+        try {
+            $products = Products::where('id', $request->product_id)->with('AvailableStock')->with(['Bins' => function($q){    
+                $q->with('Inventory');
+            }])->get();
+
+            return response()->json($products);
         }
         catch(\Exception $e)
         {

@@ -14,6 +14,17 @@ $(document).ready(function() {
         } )
         .columns.adjust();
 
+    var table1 = $('#tblListProduct').DataTable({
+        dom: 'Bfrtip',
+        scrollX: true,
+        responsive: true,
+        buttons: [
+         'excel'
+        ],
+        
+
+    }).columns.adjust();
+
     // Fetch City list by country at order page
     if( document.querySelector('#city') !== undefined && document.querySelector('#city') !== null ){
         $('#city').select2({
@@ -894,3 +905,73 @@ const viewOrder = async orderID=>{
     let viewDialog = makeDialog(html, options);
 
 };
+
+const productInfo = async (product_id)=>{
+    let form = new FormData();
+    let token = document.querySelector('meta[name=csrf-token]').getAttribute('content');
+    form.append('_token', token);
+    form.append('product_id', product_id);
+
+    let response = await fetch('/ab-ajax/getProductInfo', {method: 'POST', body: form});
+
+    let result = await response.json();
+
+    if(result.type == 'error')
+    {
+        alertify.alert(result.msg);
+        return;
+    }
+
+    if(result.length == 0 )
+    {
+        alertify.alert('No details found');
+        return;
+    }
+
+    console.log(result);
+    let html = `
+        <div id="ViewOrderPopup">
+            <div class="header mb-8">
+                <h1 class="text-center text-2xl uppercase font-bold text-yellow-500"> ${result[0].label} </h1>
+                <p class="text-center">SKU: ${result[0].sku}</p>
+            </div>
+            <div class="flex flex-col">
+                <div class="flex flex-row item-center justify-between">
+                    <h1 class="font-bold text-lg">Available Stock: ${result[0].available_stock.available_qty}</h1>
+                </div>
+
+                <div class="my-4"><h1 class="font-bold text-lg">Warehouse Bins: </h1></div>
+                <table id="tblPinfo" class="table-fixed">
+                    <thead>
+                    <tr class="border-b-2">
+                        <th class="w-1/6 p-2">Bin Location</th>
+                        <th class="w-1/6 p-2">Qty</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        ${ result[0].bins.map(bin=>{
+                            return `
+                                <tr class="border-b-2">
+                                    <td class="p-2 text-center">${ bin.bin_location }</td>
+                                    <td class="p-2 text-center"> ${bin.inventory[0].quantity} </td>
+                                </tr>
+                            `;
+                        }).join('') }
+                        
+                    </tbody>
+                
+                </table>
+                
+            </div>
+        </div>
+    `;
+
+    let options = {
+        basic:true,
+        maximizable:false,
+        resizable:false,
+        padding:true, 
+        closableByDimmer: false,
+    };
+    let pinfoDialog = makeDialog(html, options);
+}

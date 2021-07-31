@@ -51,6 +51,8 @@ Route::post('/ab-ajax/getCitiesByCountry', [AjaxController::class, 'getCitiesByC
 
 Route::post('/ab-ajax/createLabelAndShipOrder', [AjaxController::class, 'createLabelAndShipOrder'])->middleware(['auth']);
 
+Route::post('/ab-ajax/getProductInfo', [AjaxController::class, 'getProductInfo'])->middleware(['auth']);
+
 
 Route::get('/wms/websitestock/trigger/{sk}', [CronJobController::class, 'StockUpdateTrigger'])->middleware(['verify.cron']);
 Route::get('/wms/websitestock/process/{sk}', [CronJobController::class, 'StockUpdateProcess'])->middleware(['verify.cron']);
