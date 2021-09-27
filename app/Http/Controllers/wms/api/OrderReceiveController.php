@@ -108,7 +108,7 @@ class OrderReceiveController extends Controller
 
                 if( $productID !== NULL )
                 {
-                    $dataAvailStock = AvailableStocks::where('product_id', $productID)->where('available_qty','>',$item['quantity'])->get();
+                    $dataAvailStock = AvailableStocks::where('product_id', $productID)->where('available_qty','>=',$item['quantity'])->get();
                     if( count($dataAvailStock) > 0 )
                     {
                         $availStock = AvailableStocks::find($dataAvailStock[0]->id);
