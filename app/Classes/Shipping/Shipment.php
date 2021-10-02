@@ -54,7 +54,7 @@ class Shipment {
                 'margin-bottom' => 0,
                 'margin_header' =>0,
                 'margin_footer' => 0, 
-                'tempDir' => __DIR__.'/../../public/temp',
+                'tempDir' => __DIR__.'/../../../public/temp',
             ]);
             $LDArray = $this->order;
             $logo = file_get_contents('./img/logo.png');
