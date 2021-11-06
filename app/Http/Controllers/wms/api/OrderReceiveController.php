@@ -21,8 +21,11 @@ class OrderReceiveController extends Controller
     {
         try
         {
+            $shippingCarrier = [];
             // getting shipping carrier id from db
-            $shippingCarrier =  ShippingCarriers::where('shipping_method', $request->shipping_lines[0]['method_title'])->get();
+            if(count($request->shipping_lines) > 0) {
+                $shippingCarrier =  ShippingCarriers::where('shipping_method', $request->shipping_lines[0]['method_title'])->get();
+            }
             
             // getting order status id from db
             $orderStatus = OrderStatus::where('status', 'Pending')->get();
