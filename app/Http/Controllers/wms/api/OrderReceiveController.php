@@ -60,7 +60,7 @@ class OrderReceiveController extends Controller
             $order->customer_name = $request->billing['first_name']. ' ' . $request->billing['last_name'];
             $order->customer_contact = $request->billing['phone'];
             $order->order_data = serialize($request->all());
-            $order->shipping_carrier_id = ( count($shippingCarrier) > 0 ) ? $shippingCarrier[0]->id : NULL;
+            $order->shipping_carrier_id = ( count($shippingCarrier) > 0 ) ? $shippingCarrier[0]->id : 6;
             $order->order_date = $request->date_created;
             $order->payment_method = $request->payment_method_title;
             $order->order_status_id = $orderStatus[0]->id;
