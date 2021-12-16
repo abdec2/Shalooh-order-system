@@ -55,12 +55,7 @@ class SMSA {
             $passkey = env('SMSA_EXPRESS_PASSKEY');
             $date= date('Y-m-d').'T'.date('H:i:s');
             $weight = ((float)$order['orderweight'] < (float)$order['orderVolweight']) ? $order['orderVolweight'] : $order['orderweight'];
-            $weight = ($weight < 0.5) ? 0.5 : $weight;
-
-            $response = Http::withHeaders([
-                "Content-Type" => "text/xml;charset=utf-8",
-                "soapaction" => "http://smsaexpress.com/waybills/IWaybillService/GenerateAWBWithLabel"
-            ])->send("POST", $endPoint, [
+            $request = [
                 "body" => '<?xml version="1.0" encoding="utf-8"?>
                 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:way="http://smsaexpress.com/waybills/">
                    <soapenv:Header/>
@@ -91,7 +86,12 @@ class SMSA {
                       </way:GenerateAWBWithLabel>
                    </soapenv:Body>
                 </soapenv:Envelope>'
-            ]);
+            ];
+
+            $response = Http::withHeaders([
+                "Content-Type" => "text/xml;charset=utf-8",
+                "soapaction" => "http://smsaexpress.com/waybills/IWaybillService/GenerateAWBWithLabel"
+            ])->send("POST", $endPoint, $request);
 
             $data = $response->getBody()->getContents();
 
@@ -101,7 +101,7 @@ class SMSA {
 
             $array = json_decode(json_encode($e),TRUE);
 
-            return $array;
+            return $request;
 
         }
         catch(\Exception $e)
