@@ -55,6 +55,7 @@ class SMSA {
             $passkey = env('SMSA_EXPRESS_PASSKEY');
             $date= date('Y-m-d').'T'.date('H:i:s');
             $weight = ((float)$order['orderweight'] < (float)$order['orderVolweight']) ? $order['orderVolweight'] : $order['orderweight'];
+            $weight = ($weight < 0.5) ? 0.5 : $weight;
 
             $response = Http::withHeaders([
                 "Content-Type" => "text/xml;charset=utf-8",
@@ -100,7 +101,7 @@ class SMSA {
 
             $array = json_decode(json_encode($e),TRUE);
 
-            return $data;
+            return $array;
 
         }
         catch(\Exception $e)
