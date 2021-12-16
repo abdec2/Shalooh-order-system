@@ -100,7 +100,7 @@ class SMSA {
 
             $array = json_decode(json_encode($e),TRUE);
 
-            return $array;
+            return $data;
 
         }
         catch(\Exception $e)
