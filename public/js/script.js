@@ -20,26 +20,25 @@ if(document.querySelector('#btnCreateLbl') !== null)
             document.querySelector('#orderStatus').value='in-transit';
             loading.style.display = 'block';
 
-        
-            // fetch('/create_label', {
-            //     method: 'POST', 
-            //     body: formData
-            // }).then(res=>res.blob()).then(blob=>{
-            //     const url = window.URL.createObjectURL(blob);
-            //     const a = document.createElement('a');
-            //     a.style.display = 'none';
-            //     a.href = url;
-            //     if(blob.type == "application/zip"){
-            //         a.download = document.querySelector('#orderID').value+'_'+getCurrentDate()+'.zip';
-            //     } else {
-            //         a.download = document.querySelector('#orderID').value+'_'+getCurrentDate()+'.pdf';
-            //     }
-            //     document.body.appendChild(a);
-            //     a.click();
-            //     window.URL.revokeObjectURL(url);
-            //     form.submit();
+            fetch('/create_label', {
+                method: 'POST', 
+                body: formData
+            }).then(res=>res.blob()).then(blob=>{
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                if(blob.type == "application/zip"){
+                    a.download = document.querySelector('#orderID').value+'_'+getCurrentDate()+'.zip';
+                } else {
+                    a.download = document.querySelector('#orderID').value+'_'+getCurrentDate()+'.pdf';
+                }
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                form.submit();
 
-            // }).catch(() => alert('oh no!'));
+            }).catch(() => alert('oh no!'));
 
             // fetch('/create_label', {
             //     method: 'POST', 
@@ -53,14 +52,14 @@ if(document.querySelector('#btnCreateLbl') !== null)
             //     loading.style.display = 'none';
             // });
 
-            fetch('/create_label', {
-                method: 'POST', 
-                body: formData
-            }).then(res=>console.log(res)).catch((e) => {
-                console.log(e)
-                alert('oh no!')
-                loading.style.display = 'none';
-            });
+            // fetch('/create_label', {
+            //     method: 'POST', 
+            //     body: formData
+            // }).then(res=>console.log(res)).catch((e) => {
+            //     console.log(e)
+            //     alert('oh no!')
+            //     loading.style.display = 'none';
+            // });
             
            
         } else {
