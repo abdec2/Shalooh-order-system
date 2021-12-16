@@ -474,20 +474,20 @@ class AjaxController extends Controller
 
                 // WoocommerceClass::update_shipment_tracking_number($order[0]->shipping_carrier->shipping_carrier, $result['tracking_number'], $order[0]->order_number);
 
-                if(isset($result['COMM_INV']))
-                {   
-                    $zipper = new \Madnest\Madzipper\Madzipper;
-                    $zipper->make('test.zip')->addString($orderArray['Order_ID'].'_AWB_'.date('Y-m-d H:i:s').'.pdf', $result['file'])->addString($orderArray['Order_ID'].'_COMM_INV_'.date('Y-m-d H:i:s').'.pdf', $result['COMM_INV'])->close();
+                // if(isset($result['COMM_INV']))
+                // {   
+                //     $zipper = new \Madnest\Madzipper\Madzipper;
+                //     $zipper->make('test.zip')->addString($orderArray['Order_ID'].'_AWB_'.date('Y-m-d H:i:s').'.pdf', $result['file'])->addString($orderArray['Order_ID'].'_COMM_INV_'.date('Y-m-d H:i:s').'.pdf', $result['COMM_INV'])->close();
 
-                    $zipfile = file_get_contents('test.zip');
+                //     $zipfile = file_get_contents('test.zip');
 
-                    unlink('test.zip');
+                //     unlink('test.zip');
 
-                    return response()->sendZip($zipfile);                        
+                //     return response()->sendZip($zipfile);                        
 
-                } else {
-                    return response()->attachment($result['file']);
-                }
+                // } else {
+                //     return response()->attachment($result['file']);
+                // }
             }
         }
         catch(\Exception $e)
