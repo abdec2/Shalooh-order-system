@@ -784,8 +784,7 @@ const create_label = (orderID, order_number) => {
     })
     .then(res=>{
         const contentType = res.headers.get("content-type");
-        // console.log(res);
-        // res.json().then(da => console.log(da));
+        console.log(res)
         if (contentType && contentType.indexOf("application/json") !== -1) {
             return res.json().then(data => {
               // process your JSON data further
@@ -807,7 +806,7 @@ const create_label = (orderID, order_number) => {
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
-                window.location.reload();
+                // window.location.reload();
                 
             });
           }
