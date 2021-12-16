@@ -806,7 +806,7 @@ const create_label = (orderID, order_number) => {
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
-                window.location.reload();
+                // window.location.reload();
                 
             });
           }
