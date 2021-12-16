@@ -23,8 +23,8 @@ class Shipment {
         if( strtoupper($this->shipping_method) == strtoupper('SMSA Express')) {
             $SMSA = new SMSA;
             $response = $SMSA->Generate_SMSA_Waybill_Number_With_File($this->order);
-            $this->result['file'] = base64_decode($response['AwbFile']);
-            $this->result['tracking_number'] = $response['AwbNumber'];
+            // $this->result['file'] = base64_decode($response['AwbFile']);
+            // $this->result['tracking_number'] = $response['AwbNumber'];
             $this->result['response'] = $response; // test
         }
         else if( strtoupper($this->shipping_method) == strtoupper('FedEx') ) {
