@@ -466,12 +466,11 @@ class AjaxController extends Controller
                 $shipment = new Shipment($order[0]->shipping_carrier->shipping_carrier, $orderArray);
                 $result = $shipment->addShip();
 
-                dd($result);
-                $OrderStatus = OrderStatus::where( strtoupper('status'), strtoupper('Shipped') )->get();
-                $orderUpdate = Orders::find($request->orderID);
-                $orderUpdate->tracking_no = $result['tracking_number'];
-                $orderUpdate->order_status_id = $OrderStatus[0]->id;
-                $orderUpdate->save();
+                // $OrderStatus = OrderStatus::where( strtoupper('status'), strtoupper('Shipped') )->get();
+                // $orderUpdate = Orders::find($request->orderID);
+                // $orderUpdate->tracking_no = $result['tracking_number'];
+                // $orderUpdate->order_status_id = $OrderStatus[0]->id;
+                // $orderUpdate->save();
 
                 // WoocommerceClass::update_shipment_tracking_number($order[0]->shipping_carrier->shipping_carrier, $result['tracking_number'], $order[0]->order_number);
 

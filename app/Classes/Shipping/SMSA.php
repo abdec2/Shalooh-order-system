@@ -94,15 +94,13 @@ class SMSA {
 
             $data = $response->getBody()->getContents();
 
-            return $data;
-
-            // $xmlobj = simplexml_load_string($data);
-            // $e = $xmlobj->children('s',true)->Body->children()->GenerateAWBWithLabelResponse->children()->GenerateAWBWithLabelResult->Labels->SAWB;
+            $xmlobj = simplexml_load_string($data);
+            $e = $xmlobj->children('s',true)->Body->children()->GenerateAWBWithLabelResponse->children()->GenerateAWBWithLabelResult->Labels->SAWB;
 
 
-            // $array = json_decode(json_encode($e),TRUE);
+            $array = json_decode(json_encode($e),TRUE);
 
-            // return $array;
+            return $array;
 
         }
         catch(\Exception $e)
