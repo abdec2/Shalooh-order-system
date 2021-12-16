@@ -94,7 +94,7 @@ class SMSA {
 
             $data = $response->getBody()->getContents();
 
-
+            dd($data);
             $xmlobj = simplexml_load_string($data);
             $e = $xmlobj->children('s',true)->Body->children()->GenerateAWBWithLabelResponse->children()->GenerateAWBWithLabelResult->Labels->SAWB;
 
