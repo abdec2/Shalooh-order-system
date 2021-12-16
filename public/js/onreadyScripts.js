@@ -783,34 +783,34 @@ const create_label = (orderID, order_number) => {
         body: form
     })
     .then(res=>{
-        // const contentType = res.headers.get("content-type");
-        console.log(res);
-        res.json().then(da => console.log(da));
-        // if (contentType && contentType.indexOf("application/json") !== -1) {
-        //     return res.json().then(data => {
-        //       // process your JSON data further
-        //       alertify.alert(data.msg);
+        const contentType = res.headers.get("content-type");
+        // console.log(res);
+        // res.json().then(da => console.log(da));
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+            return res.json().then(data => {
+              // process your JSON data further
+              alertify.alert(data.msg);
 
-        //     });
-        //   } else {
-        //     return res.blob().then(blob => {
+            });
+          } else {
+            return res.blob().then(blob => {
               
-        //         const url = window.URL.createObjectURL(blob);
-        //         const a = document.createElement('a');
-        //         a.style.display = 'none';
-        //         a.href = url;
-        //         if(blob.type == "application/zip"){
-        //             a.download = order_number+'_'+getCurrentDate()+'.zip';
-        //         } else {
-        //             a.download = order_number+'_'+getCurrentDate()+'.pdf';
-        //         }
-        //         document.body.appendChild(a);
-        //         a.click();
-        //         window.URL.revokeObjectURL(url);
-        //         // window.location.reload();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                if(blob.type == "application/zip"){
+                    a.download = order_number+'_'+getCurrentDate()+'.zip';
+                } else {
+                    a.download = order_number+'_'+getCurrentDate()+'.pdf';
+                }
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                window.location.reload();
                 
-        //     });
-        //   }
+            });
+          }
     });
         
     // .then(result=>console.log(result));
