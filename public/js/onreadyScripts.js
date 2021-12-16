@@ -787,7 +787,8 @@ const create_label = (orderID, order_number) => {
         if (contentType && contentType.indexOf("application/json") !== -1) {
             return res.json().then(data => {
               // process your JSON data further
-              alertify.alert(data.msg);
+            //   alertify.alert(data.msg);
+            console.log(data)
 
             });
           } else {
