@@ -488,6 +488,8 @@ class AjaxController extends Controller
                 // } else {
                 //     return response()->attachment($result['file']);
                 // }
+
+                return $result;
             }
         }
         catch(\Exception $e)
