@@ -466,7 +466,7 @@ class AjaxController extends Controller
                 $shipment = new Shipment($order[0]->shipping_carrier->shipping_carrier, $orderArray);
                 $result = $shipment->addShip();
 
-                // print_r($result);
+                dd($result);
                 $OrderStatus = OrderStatus::where( strtoupper('status'), strtoupper('Shipped') )->get();
                 $orderUpdate = Orders::find($request->orderID);
                 $orderUpdate->tracking_no = $result['tracking_number'];
