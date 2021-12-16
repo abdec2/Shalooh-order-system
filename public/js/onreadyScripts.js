@@ -783,7 +783,8 @@ const create_label = (orderID, order_number) => {
         body: form
     })
     .then(res=>{
-        const contentType = res.headers.get("content-type");
+        // const contentType = res.headers.get("content-type");
+        console.log(res);
         res.json().then(da => console.log(da));
         // if (contentType && contentType.indexOf("application/json") !== -1) {
         //     return res.json().then(data => {
