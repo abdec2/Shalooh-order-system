@@ -41,13 +41,22 @@ if(document.querySelector('#btnCreateLbl') !== null)
 
             // }).catch(() => alert('oh no!'));
 
+            // fetch('/create_label', {
+            //     method: 'POST', 
+            //     body: formData
+            // }).then(res=>res.json()).then(result=>{
+            //     console.log(result);
+            //     loading.style.display = 'none';
+            // }).catch((e) => {
+            //     console.log(e)
+            //     alert('oh no!')
+            //     loading.style.display = 'none';
+            // });
+
             fetch('/create_label', {
                 method: 'POST', 
                 body: formData
-            }).then(res=>res.json()).then(result=>{
-                console.log(result);
-                loading.style.display = 'none';
-            }).catch((e) => {
+            }).then(res=>console.log(res)).catch((e) => {
                 console.log(e)
                 alert('oh no!')
                 loading.style.display = 'none';
