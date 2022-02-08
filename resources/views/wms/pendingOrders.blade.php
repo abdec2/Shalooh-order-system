@@ -43,6 +43,9 @@
                                                         <x-dropdown-link onclick="waveOrder();">
                                                             {{ __('Wave') }}
                                                         </x-dropdown-link>
+                                                        <x-dropdown-link onclick="cancelOrder();">
+                                                            {{ __('Cancel Order') }}
+                                                        </x-dropdown-link>
                                                         <script>
                                                             function waveOrder(){
                                                                 let loading = document.querySelector('.loading');
@@ -68,6 +71,35 @@
                                                                     if(result.type == 'success')
                                                                     {
                                                                         window.location.href='{{ route("wms.orders.processing") }}';
+                                                                    }
+                                                                }).catch(e=>{
+                                                                    console.log(e);
+                                                                    loading.style.display = 'none';
+                                                                });
+                                                            }
+                                                            function cancelOrder(){
+                                                                let loading = document.querySelector('.loading');
+                                                                let input = document.querySelectorAll('input[type=checkbox]:checked');
+                                                                if(input.length === 0) {
+                                                                    alertify.alert('You must check at least one Order to process');
+                                                                    return;
+                                                                }
+                                                                let valArray = [];
+                                                                input.forEach(item=>{
+                                                                    valArray.push(item.value);
+                                                                }) 
+                                                                loading.style.display = 'block';
+                                                                let formData = new FormData();
+                                                                formData.append('order_id', JSON.stringify(valArray));
+                                                                formData.append('_token', "{{ csrf_token() }}");
+                                                                fetch('/ab-ajax/cancelOrder', {
+                                                                    method: 'POST', 
+                                                                    body: formData
+                                                                }).then(res=>res.json()).then(result=>{
+                                                                    loading.style.display = 'none';
+                                                                    if(result.type == 'success')
+                                                                    {
+                                                                        window.location.href='{{ route("wms.orders.pending") }}';
                                                                     }
                                                                 }).catch(e=>{
                                                                     console.log(e);

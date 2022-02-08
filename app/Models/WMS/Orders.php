@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\WMS\OrderAssignedUser;
 use App\Models\WMS\ShippingCarriers;
+use App\Models\WMS\OrderItems;
 
 
 class Orders extends Model
@@ -30,5 +31,9 @@ class Orders extends Model
     function shipping_carrier()
     {
         return $this->belongsTo(ShippingCarriers::class);
+    }
+
+    function orderItems() {
+        return $this->hasMany(OrderItems::class, 'order_id');
     }
 }

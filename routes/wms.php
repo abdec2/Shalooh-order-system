@@ -28,6 +28,7 @@ Route::get('/wms/orders/shipped', [OrderController::class, 'listShippedOrders'])
 Route::post('/wms/products/add_products', [ProductsController::class, 'add_products'])->middleware(['auth'])->name('wms.products.add_products');
 
 Route::post('/ab-ajax/wavaOrder', [AjaxController::class, 'waveOrder'])->middleware(['auth']);
+Route::post('/ab-ajax/cancelOrder', [AjaxController::class, 'cancelOrder'])->middleware(['auth']);
 
 Route::post('/ab-ajax/fulfillment', [AjaxController::class, 'fulfillment'])->middleware(['auth']);
 

@@ -12,6 +12,8 @@ use App\Models\WMS\countriesModel;
 use App\Models\WMS\citiesModel;
 use App\Models\WMS\Inventory;
 use App\Models\WMS\Products;
+use App\Models\WMS\AvailableStocks;
+
 
 use App\Classes\Shipping\Shipment;
 use App\Classes\livesite\WoocommerceClass;
@@ -51,6 +53,40 @@ class AjaxController extends Controller
             return response()->json($data);
         }
     } // function ends here
+
+    function cancelOrder(Request $request)
+    {
+        try {
+            $order_ids = json_decode($request->order_id);
+            foreach($order_ids as $orderId) {
+                $orders = Orders::with(['orderItems'=>function($q) {
+                            $q->with(['product' => function($qq) {
+                                $qq->with(['AvailableStock']);
+                            }]);
+                        }])
+                        ->where('id', $orderId)
+                        ->get();
+                foreach($orders as $order) {
+                    foreach($order->orderItems as $item) {
+                        $a_stock = AvailableStocks::find($item->product->AvailableStock->id);
+                        $a_stock->available_qty += $item->order_qty;
+                        $a_stock->save();
+                    }
+                    $updateOrderStatus = Orders::find($order->id);
+                    $updateOrderStatus->order_status_id = 5;
+                    $updateOrderStatus->save();
+                }
+            }
+            $data['type']='success';
+            $data['msg'] = 'Order Cancelled..';
+            return response()->json($data);
+
+        } catch(\Exception $e){
+            $data['type']='error';
+            $data['msg'] = $e->getMessage();
+            return response()->json($data);
+        }
+    } // function ends here 
 
 
     function fulfillment(Request $request)

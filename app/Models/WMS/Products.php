@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\WMS\Bins;
 use App\Models\WMS\AvailableStocks;
+use App\Models\WMS\OrderItems;
 
 class Products extends Model
 {
@@ -25,6 +26,10 @@ class Products extends Model
     function AvailableStock()
     {
         return $this->hasOne(AvailableStocks::class, 'product_id');
+    }
+
+    function OrderItems() {
+        return $this->hasOne(OrderItems::class, 'product_id');
     }
 
     
